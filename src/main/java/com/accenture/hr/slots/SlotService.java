@@ -1,4 +1,4 @@
-package com.accenture.hr;
+package com.accenture.hr.slots;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

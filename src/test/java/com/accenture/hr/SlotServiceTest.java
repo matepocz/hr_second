@@ -1,5 +1,6 @@
 package com.accenture.hr;
 
+import com.accenture.hr.slots.SlotService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

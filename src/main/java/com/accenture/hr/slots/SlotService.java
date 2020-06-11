@@ -1,6 +1,7 @@
 package com.accenture.hr.slots;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +11,9 @@ import java.util.Map;
 
 @Service
 @Transactional
-@Slf4j
 public class SlotService {
+
+    private static final Logger log = LoggerFactory.getLogger(SlotService.class);
 
     private final Integer currentLimit;
     private final Map<Long, LocalDateTime> peopleInside;
@@ -26,16 +28,16 @@ public class SlotService {
 
     public void registerRequest(Long userId) {
         if (peopleInside.containsKey(userId)) {
-            log.error("User is already in building! UserId: " + userId);
+            log.error("User is already in building! UserId: {}", userId);
         } else if (peopleWaiting.containsKey(userId)) {
-            log.error("User is already on waitinglist! UserId: " + userId);
+            log.error("User is already on waitinglist! UserId: {}", userId);
         } else {
             if (peopleInside.size() < currentLimit) {
                 peopleInside.put(userId, LocalDateTime.now());
-                log.debug("User checked into building! UserId: " + userId);
+                log.debug("User checked into building! UserId: {}", userId);
             } else {
                 peopleWaiting.put(userId, LocalDateTime.now());
-                log.debug("User placed on waitinglist! UserId: " + userId);
+                log.debug("User placed on waitinglist! UserId: {}", userId);
             }
         }
     }

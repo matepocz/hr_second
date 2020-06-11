@@ -1,0 +1,19 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:file:~/test
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+
+logging:
+  level:
+    com.accenture.hr: trace
+
+maxCapacity: 20
+currentAllowancePercent: 10
+
+cors-policies: http://localhost:3000, http://127.0.0.1:3000

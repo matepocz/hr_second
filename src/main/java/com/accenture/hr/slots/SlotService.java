@@ -58,7 +58,7 @@ public class SlotService {
     public int entryRequest(long userId) {
         int freeCapacity = currentLimit - peopleInside.size();
         int positionInQueue = peopleWaiting.indexOf(userId);
-        if (positionInQueue <= freeCapacity) {
+        if (positionInQueue < freeCapacity) {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
             log.debug("User entered into building! UserId: {}", userId);

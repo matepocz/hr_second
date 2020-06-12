@@ -14,9 +14,9 @@ import java.util.*;
 public class SlotServiceTest {
 
     private SlotService slotService;
-    private Integer currentLimit = 10;
-    private List<Long> peopleInside = new ArrayList<>();
-    private List<Long> peopleWaiting = new ArrayList<>();
+    private final Integer currentLimit = 10;
+    private final List<Long> peopleInside = new ArrayList<>();
+    private final List<Long> peopleWaiting = new ArrayList<>();
 
     @BeforeEach
     private void init() {
@@ -105,5 +105,23 @@ public class SlotServiceTest {
         peopleInside.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
         peopleWaiting.addAll(Arrays.asList(11L, 12L, 13L, 14L));
         Assertions.assertEquals(3, slotService.entryRequest(13L));
+    }
+
+    @Test
+    public void testEntry_filterFakeEntry(){
+        peopleInside.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L));
+        peopleWaiting.addAll(Arrays.asList(9L, 10L, 11L));
+        slotService.entryRequest(9L);
+        Assertions.assertEquals(2, slotService.entryRequest(11L));
+    }
+
+    @Test
+    public void testEntry(){
+        peopleInside.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L));
+        peopleWaiting.addAll(Arrays.asList(9L, 10L, 11L));
+        slotService.entryRequest(10L);
+        slotService.entryRequest(9L);
+        Assertions.assertEquals(1, slotService.entryRequest(11L));
+        Assertions.assertEquals(peopleInside.size(), currentLimit);
     }
 }

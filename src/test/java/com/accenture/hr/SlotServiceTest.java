@@ -8,10 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SlotServiceTest {
@@ -87,4 +84,26 @@ public class SlotServiceTest {
         Assertions.assertEquals(0, slotService.statusRequest(1L));
     }
 
+    @Test
+    public void testExit_isPeople_currentlyNotInBuilding() {
+        peopleInside.add(1L);
+        peopleInside.add(2L);
+        slotService.exitRequest(4L);
+        Assertions.assertEquals(2, peopleInside.size());
+    }
+
+    @Test
+    public void testExit_exitUser() {
+        peopleInside.add(1L);
+        peopleInside.add(2L);
+        slotService.exitRequest(1L);
+        Assertions.assertEquals(1, peopleInside.size());
+    }
+
+    @Test
+    public void testEntry_isFull(){
+        peopleInside.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
+        peopleWaiting.addAll(Arrays.asList(11L, 12L, 13L, 14L));
+        Assertions.assertEquals(3, slotService.entryRequest(13L));
+    }
 }

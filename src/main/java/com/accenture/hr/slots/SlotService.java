@@ -50,8 +50,29 @@ public class SlotService {
             positionInQueue = -1;
             log.error("User is already in building! UserId: {}", userId);
         } else {
-            log.error("User is not registered yet! UserId: {}", 0L);
+            log.error("User is not registered yet! UserId: {}", userId);
         }
         return positionInQueue;
+    }
+
+    public int entryRequest(long userId) {
+        int freeCapacity = currentLimit - peopleInside.size();
+        int positionInQueue = peopleWaiting.indexOf(userId);
+        if (positionInQueue <= freeCapacity) {
+            peopleInside.add(userId);
+            peopleWaiting.remove(userId);
+            log.debug("User entered into building! UserId: {}", userId);
+        }
+        return statusRequest(userId);
+
+    }
+
+    public void exitRequest(long userId) {
+        if (!peopleInside.contains(userId)) {
+            log.error("User is currently not in the building! UserId: {}", userId);
+        } else {
+            peopleInside.remove(userId);
+            log.debug("User exited the building! UserId: {}", userId);
+        }
     }
 }

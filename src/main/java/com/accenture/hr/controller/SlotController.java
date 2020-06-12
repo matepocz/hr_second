@@ -40,7 +40,7 @@ public class SlotController {
                 new ResponseEntity<>(statusResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/entry")
+    @PutMapping("/entry")
     public ResponseEntity<EntryResponse> entry(@RequestParam Long userId) {
         EntryResponse entryResponse = slotService.entryRequest(userId);
         StatusList status = entryResponse.getStatus();
@@ -49,7 +49,7 @@ public class SlotController {
                 new ResponseEntity<>(entryResponse, HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping("/exit")
+    @PutMapping("/exit")
     public ResponseEntity<ExitResponse> exit(@RequestParam Long userId) {
         ExitResponse exitResponse = slotService.exitRequest(userId);
         StatusList status = exitResponse.getStatus();

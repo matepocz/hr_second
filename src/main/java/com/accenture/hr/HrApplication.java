@@ -5,9 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class HrApplication {
@@ -22,13 +21,13 @@ public class HrApplication {
     }
 
     @Bean
-    public Map<Long, LocalDateTime> peopleInside() {
-        return new ConcurrentHashMap<>();
+    public List<Long> peopleInside() {
+        return new ArrayList<>();
     }
 
     @Bean
-    public Map<Long, LocalDateTime> peopleWaiting() {
-        return new ConcurrentHashMap<>();
+    public List<Long> peopleWaiting() {
+        return new ArrayList<>();
     }
 
     @Bean

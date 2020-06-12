@@ -8,7 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
@@ -16,8 +18,8 @@ public class SlotServiceTest {
 
     private SlotService slotService;
     private Integer currentLimit = 10;
-    private Map<Long, LocalDateTime> peopleInside = new HashMap<>();
-    private Map<Long, LocalDateTime> peopleWaiting = new HashMap<>();
+    private List<Long> peopleInside = new ArrayList<>();
+    private List<Long> peopleWaiting = new ArrayList<>();
 
     @BeforeEach
     private void init() {

@@ -1,7 +1,8 @@
 package com.accenture.hr.slots;
 
 import com.accenture.hr.enums.StatusList;
-import com.accenture.hr.responses.EnterResponse;
+import com.accenture.hr.responses.EntryResponse;
+import com.accenture.hr.responses.ExitResponse;
 import com.accenture.hr.responses.RegisterResponse;
 import com.accenture.hr.responses.StatusResponse;
 import org.slf4j.Logger;
@@ -68,25 +69,33 @@ public class SlotService {
         return statusResponse;
     }
 
-    public EnterResponse entryRequest(long userId) {
+    public EntryResponse entryRequest(long userId) {
+        EntryResponse entryResponse = new EntryResponse();
         int freeCapacity = currentLimit - peopleInside.size();
         int positionInQueue = peopleWaiting.indexOf(userId);
         if (positionInQueue < freeCapacity) {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
+            entryResponse.setStatus(StatusList.SUCCESS);
             log.debug("User entered into building! UserId: {}", userId);
+        } else {
+            entryResponse.setStatus(StatusList.FAIL);
+            log.debug("No free capacity, User stays in waiting list! UserId: {}", userId);
         }
-        // return statusRequest(userId);
-        return null;
+        return entryResponse;
 
     }
 
-    public void exitRequest(long userId) {
+    public ExitResponse exitRequest(long userId) {
+        ExitResponse exitResponse = new ExitResponse();
         if (!peopleInside.contains(userId)) {
             log.error("User is currently not in the building! UserId: {}", userId);
+            exitResponse.setStatus(StatusList.FAIL);
         } else {
             peopleInside.remove(userId);
             log.debug("User exited the building! UserId: {}", userId);
+            exitResponse.setStatus(StatusList.SUCCESS);
         }
+        return exitResponse;
     }
 }

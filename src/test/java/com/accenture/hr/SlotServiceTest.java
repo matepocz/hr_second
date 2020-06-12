@@ -121,26 +121,10 @@ public class SlotServiceTest {
     }
 
     @Test
-    public void testExit_isPeople_currentlyNotInBuilding() {
-        peopleInside.add(1L);
-        peopleInside.add(2L);
-        slotService.exitRequest(4L);
-        Assertions.assertEquals(2, peopleInside.size());
-    }
-
-    @Test
-    public void testExit_exitUser() {
-        peopleInside.add(1L);
-        peopleInside.add(2L);
-        slotService.exitRequest(1L);
-        Assertions.assertEquals(1, peopleInside.size());
-    }
-
-    @Test
     public void testEntry_isFull(){
         peopleInside.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
         peopleWaiting.addAll(Arrays.asList(11L, 12L, 13L, 14L));
-        Assertions.assertEquals(3, slotService.entryRequest(13L));
+        Assertions.assertEquals(StatusList.FAIL, slotService.entryRequest(13L).getStatus());
     }
 
     @Test
@@ -148,16 +132,28 @@ public class SlotServiceTest {
         peopleInside.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L));
         peopleWaiting.addAll(Arrays.asList(9L, 10L, 11L));
         slotService.entryRequest(9L);
-        Assertions.assertEquals(2, slotService.entryRequest(11L));
+        Assertions.assertEquals(StatusList.FAIL, slotService.entryRequest(11L).getStatus());
     }
 
     @Test
     public void testEntry(){
         peopleInside.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L));
         peopleWaiting.addAll(Arrays.asList(9L, 10L, 11L));
-        slotService.entryRequest(10L);
         slotService.entryRequest(9L);
-        Assertions.assertEquals(1, slotService.entryRequest(11L));
+        Assertions.assertEquals(StatusList.SUCCESS, slotService.entryRequest(10L).getStatus());
         Assertions.assertEquals(peopleInside.size(), currentLimit);
+    }
+
+    @Test
+    public void testExit_isPeople_currentlyNotInBuilding() {
+        Assertions.assertEquals(StatusList.FAIL, slotService.exitRequest(4L).getStatus());
+    }
+
+    @Test
+    public void testExit_exitUser() {
+        peopleInside.add(1L);
+        peopleInside.add(2L);
+        Assertions.assertEquals(StatusList.SUCCESS, slotService.exitRequest(1L).getStatus());
+        Assertions.assertEquals(1, peopleInside.size());
     }
 }

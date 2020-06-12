@@ -9,9 +9,7 @@ import com.accenture.hr.service.SlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/slots")
@@ -24,7 +22,7 @@ public class SlotController {
         this.slotService = slotService;
     }
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestParam Long userId) {
         RegisterResponse registerResponse = slotService.registerRequest(userId);
         StatusList status = registerResponse.getStatus();
@@ -33,7 +31,7 @@ public class SlotController {
                 new ResponseEntity<>(registerResponse, HttpStatus.FORBIDDEN);
     }
 
-    @RequestMapping("/status")
+    @GetMapping("/status")
     public ResponseEntity<StatusResponse> status(@RequestParam Long userId) {
         StatusResponse statusResponse = slotService.statusRequest(userId);
         StatusList status = statusResponse.getStatus();
@@ -42,7 +40,7 @@ public class SlotController {
                 new ResponseEntity<>(statusResponse, HttpStatus.OK);
     }
 
-    @RequestMapping("/entry")
+    @PostMapping("/entry")
     public ResponseEntity<EntryResponse> entry(@RequestParam Long userId) {
         EntryResponse entryResponse = slotService.entryRequest(userId);
         StatusList status = entryResponse.getStatus();
@@ -51,7 +49,7 @@ public class SlotController {
                 new ResponseEntity<>(entryResponse, HttpStatus.FORBIDDEN);
     }
 
-    @RequestMapping("/exit")
+    @PostMapping("/exit")
     public ResponseEntity<ExitResponse> exit(@RequestParam Long userId) {
         ExitResponse exitResponse = slotService.exitRequest(userId);
         StatusList status = exitResponse.getStatus();

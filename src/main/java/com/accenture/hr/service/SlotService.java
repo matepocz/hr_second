@@ -23,7 +23,6 @@ public class SlotService {
     private final List<Long> peopleInside;
     private final List<Long> peopleWaiting;
 
-
     @Autowired
     public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting) {
         this.currentLimit = currentLimit;
@@ -40,26 +39,34 @@ public class SlotService {
             log.error("User is already on waitinglist! UserId: {}", userId);
             registerResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
         } else {
-            if (peopleInside.size() < currentLimit) {
-                peopleInside.add(userId);
-                log.debug("User checked into building! UserId: {}", userId);
-                registerResponse.setStatus(StatusList.SUCCESS);
-            } else {
-                peopleWaiting.add(userId);
-                log.debug("User placed on waitinglist! UserId: {}", userId);
-                registerResponse.setStatus(StatusList.TO_WAITING_LIST);
-            }
+            putUserToCorrespondingList(userId, registerResponse);
         }
         return registerResponse;
     }
 
+    private void putUserToCorrespondingList(Long userId, RegisterResponse registerResponse) {
+        if (peopleInside.size() < currentLimit) {
+            peopleInside.add(userId);
+            log.debug("User checked into building! UserId: {}", userId);
+            registerResponse.setStatus(StatusList.SUCCESS);
+        } else {
+            peopleWaiting.add(userId);
+            log.debug("User placed on waitinglist! UserId: {}", userId);
+            registerResponse.setStatus(StatusList.TO_WAITING_LIST);
+        }
+    }
+
     public StatusResponse statusRequest(long userId) {
         StatusResponse statusResponse = new StatusResponse();
-        if (!isValidUser(userId)) {
+        if (userNotFound(userId)) {
             statusResponse.setStatus(StatusList.NOT_REGISTERED);
             log.error("User is not registered yet! UserId: {}", userId);
             return statusResponse;
         }
+        return makeStatusResponse(userId, statusResponse);
+    }
+
+    private StatusResponse makeStatusResponse(long userId, StatusResponse statusResponse) {
         if (peopleWaiting.contains(userId)) {
             int positionInQueue = peopleWaiting.indexOf(userId) + 1;
             statusResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
@@ -73,11 +80,15 @@ public class SlotService {
 
     public EntryResponse entryRequest(long userId) {
         EntryResponse entryResponse = new EntryResponse();
-        if (!isValidUser(userId)) {
+        if (userNotFound(userId)) {
             entryResponse.setStatus(StatusList.NOT_REGISTERED);
             log.error("User is not registered yet! UserId: {}", userId);
             return entryResponse;
         }
+        return makeEntryResponse(userId, entryResponse);
+    }
+
+    private EntryResponse makeEntryResponse(long userId, EntryResponse entryResponse) {
         int freeCapacity = currentLimit - peopleInside.size();
         int positionInQueue = peopleWaiting.indexOf(userId);
         if (positionInQueue < freeCapacity) {
@@ -90,7 +101,6 @@ public class SlotService {
             log.debug("No free capacity, User stays in waiting list! UserId: {}", userId);
         }
         return entryResponse;
-
     }
 
     public ExitResponse exitRequest(long userId) {
@@ -106,7 +116,7 @@ public class SlotService {
         return exitResponse;
     }
 
-    public boolean isValidUser(long userId) {
-        return peopleWaiting.contains(userId) && peopleInside.contains(userId);
+    public boolean userNotFound(long userId) {
+        return !peopleWaiting.contains(userId) && !peopleInside.contains(userId);
     }
 }

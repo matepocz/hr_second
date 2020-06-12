@@ -1,4 +1,4 @@
-package com.accenture.hr;
+package com.accenture.hr.slots;
 
 import com.accenture.hr.enums.StatusList;
 import com.accenture.hr.slots.SlotService;

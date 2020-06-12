@@ -30,6 +30,14 @@ public class SlotService {
         this.peopleWaiting = peopleWaiting;
     }
 
+    /**
+     * Registers the user by it's unique user ID
+     * </p>
+     * Puts the user to a waiting list if there
+     * is no free capacity in the building.
+     * @param userId the ID of the user
+     * @return A RegisterResponse containing an enum
+     */
     public RegisterResponse registerRequest(Long userId) {
         RegisterResponse registerResponse = new RegisterResponse();
         if (peopleInside.contains(userId)) {
@@ -56,6 +64,12 @@ public class SlotService {
         }
     }
 
+    /**
+     * Get a user's current status by its ID
+     * @param userId the ID of the user
+     * @return A StatusResponse containing an enum with
+     * the result, also the user's position in the waiting list.
+     */
     public StatusResponse statusRequest(long userId) {
         StatusResponse statusResponse = new StatusResponse();
         if (userNotFound(userId)) {
@@ -78,6 +92,14 @@ public class SlotService {
         return statusResponse;
     }
 
+    /**
+     * Attempts to check in the user by its ID
+     * </p>
+     * If there is no free capacity in the building
+     * puts the user to the waiting queue
+     * @param userId the ID of the user
+     * @return An EntryResponse containing an enum with the result
+     */
     public EntryResponse entryRequest(long userId) {
         EntryResponse entryResponse = new EntryResponse();
         if (userNotFound(userId)) {
@@ -103,6 +125,12 @@ public class SlotService {
         return entryResponse;
     }
 
+    /**
+     * Attempts to check out the user from the building
+     * by its user ID
+     * @param userId the ID of the user
+     * @return An ExitResponse containing an enum with the result
+     */
     public ExitResponse exitRequest(long userId) {
         ExitResponse exitResponse = new ExitResponse();
         if (!peopleInside.contains(userId)) {
@@ -116,6 +144,11 @@ public class SlotService {
         return exitResponse;
     }
 
+    /**
+     * Checks whether the given user ID exists
+     * @param userId the ID of the user
+     * @return A boolean that shows the result
+     */
     public boolean userNotFound(long userId) {
         return !peopleWaiting.contains(userId) && !peopleInside.contains(userId);
     }

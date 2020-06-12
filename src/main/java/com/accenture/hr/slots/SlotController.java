@@ -1,5 +1,9 @@
 package com.accenture.hr.slots;
 
+import com.accenture.hr.responses.EntryResponse;
+import com.accenture.hr.responses.ExitResponse;
+import com.accenture.hr.responses.RegisterResponse;
+import com.accenture.hr.responses.StatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +23,26 @@ public class SlotController {
     }
 
     @RequestMapping("/register")
-    public ResponseEntity<Void> register(@RequestParam Long userId) {
-        slotService.registerRequest(userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<RegisterResponse> register(@RequestParam Long userId) {
+        RegisterResponse registerResponse = slotService.registerRequest(userId);
+        return new ResponseEntity<>(registerResponse, HttpStatus.OK);
     }
 
+    @RequestMapping("/status")
+    public ResponseEntity<StatusResponse> status(@RequestParam Long userId) {
+        StatusResponse statusResponse = slotService.statusRequest(userId);
+        return new ResponseEntity<>(statusResponse, HttpStatus.OK);
+    }
+
+    @RequestMapping("/entry")
+    public ResponseEntity<EntryResponse> entry(@RequestParam Long userId) {
+        EntryResponse entryResponse = slotService.entryRequest(userId);
+        return new ResponseEntity<>(entryResponse, HttpStatus.OK);
+    }
+
+    @RequestMapping("/exit")
+    public ResponseEntity<ExitResponse> exit(@RequestParam Long userId) {
+        ExitResponse exitResponse = slotService.exitRequest(userId);
+        return new ResponseEntity<>(exitResponse, HttpStatus.OK);
+    }
 }

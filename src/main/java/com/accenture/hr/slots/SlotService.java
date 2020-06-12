@@ -1,7 +1,9 @@
 package com.accenture.hr.slots;
 
-import com.accenture.hr.enums.RegistrationStatus;
+import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.responses.EnterResponse;
 import com.accenture.hr.responses.RegisterResponse;
+import com.accenture.hr.responses.StatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,38 +34,41 @@ public class SlotService {
         RegisterResponse registerResponse = new RegisterResponse();
         if (peopleInside.contains(userId)) {
             log.error("User is already in building! UserId: {}", userId);
-            registerResponse.setRegistrationStatus(RegistrationStatus.ALREADY_IN_BUILDING);
+            registerResponse.setRegistrationStatus(StatusList.ALREADY_IN_BUILDING);
         } else if (peopleWaiting.contains(userId)) {
             log.error("User is already on waitinglist! UserId: {}", userId);
-            registerResponse.setRegistrationStatus(RegistrationStatus.ALREADY_ON_WAITING_LIST);
+            registerResponse.setRegistrationStatus(StatusList.ALREADY_ON_WAITING_LIST);
         } else {
             if (peopleInside.size() < currentLimit) {
                 peopleInside.add(userId);
                 log.debug("User checked into building! UserId: {}", userId);
-                registerResponse.setRegistrationStatus(RegistrationStatus.SUCCESS);
+                registerResponse.setRegistrationStatus(StatusList.SUCCESS);
             } else {
                 peopleWaiting.add(userId);
                 log.debug("User placed on waitinglist! UserId: {}", userId);
-                registerResponse.setRegistrationStatus(RegistrationStatus.TO_WAITING_LIST);
+                registerResponse.setRegistrationStatus(StatusList.TO_WAITING_LIST);
             }
         }
         return registerResponse;
     }
 
-    public int statusRequest(long userId) {
-        int positionInQueue = 0;
+    public StatusResponse statusRequest(long userId) {
+        StatusResponse statusResponse = new StatusResponse();
         if (peopleWaiting.contains(userId)) {
-            positionInQueue = peopleWaiting.indexOf(userId) + 1;
+            int positionInQueue = peopleWaiting.indexOf(userId) + 1;
+            statusResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
+            statusResponse.setPositionInQueue(positionInQueue);
         } else if (peopleInside.contains(userId)) {
-            positionInQueue = -1;
+            statusResponse.setStatus(StatusList.ALREADY_IN_BUILDING);
             log.error("User is already in building! UserId: {}", userId);
         } else {
+            statusResponse.setStatus(StatusList.NOT_REGISTERED);
             log.error("User is not registered yet! UserId: {}", userId);
         }
-        return positionInQueue;
+        return statusResponse;
     }
 
-    public int entryRequest(long userId) {
+    public EnterResponse entryRequest(long userId) {
         int freeCapacity = currentLimit - peopleInside.size();
         int positionInQueue = peopleWaiting.indexOf(userId);
         if (positionInQueue < freeCapacity) {
@@ -71,7 +76,8 @@ public class SlotService {
             peopleWaiting.remove(userId);
             log.debug("User entered into building! UserId: {}", userId);
         }
-        return statusRequest(userId);
+        // return statusRequest(userId);
+        return null;
 
     }
 

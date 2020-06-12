@@ -1,6 +1,6 @@
 package com.accenture.hr;
 
-import com.accenture.hr.enums.RegistrationStatus;
+import com.accenture.hr.enums.StatusList;
 import com.accenture.hr.slots.SlotService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,8 +44,8 @@ public class SlotServiceTest {
     public void testRegister_hasSpace_alreadyInside() {
         long userId = 1L;
         slotService.registerRequest(userId);
-        RegistrationStatus actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
-        Assertions.assertEquals(RegistrationStatus.ALREADY_IN_BUILDING, actualStatus);
+        StatusList actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
+        Assertions.assertEquals(StatusList.ALREADY_IN_BUILDING, actualStatus);
     }
 
     @Test
@@ -67,8 +66,8 @@ public class SlotServiceTest {
         long userId = 22L;
         Assertions.assertEquals(currentLimit, peopleInside.size());
         Assertions.assertEquals(1, peopleWaiting.size());
-        RegistrationStatus actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
-        Assertions.assertEquals(RegistrationStatus.TO_WAITING_LIST, actualStatus);
+        StatusList actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
+        Assertions.assertEquals(StatusList.TO_WAITING_LIST, actualStatus);
     }
 
     @Test
@@ -93,8 +92,8 @@ public class SlotServiceTest {
 
         Assertions.assertEquals(currentLimit, peopleInside.size());
         Assertions.assertEquals(1, peopleWaiting.size());
-        RegistrationStatus actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
-        Assertions.assertEquals(RegistrationStatus.ALREADY_ON_WAITING_LIST, actualStatus);
+        StatusList actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
+        Assertions.assertEquals(StatusList.ALREADY_ON_WAITING_LIST, actualStatus);
     }
 
     @Test
@@ -102,21 +101,23 @@ public class SlotServiceTest {
         for (int i = 1; i <= currentLimit; i++) {
             slotService.registerRequest((long) i);
         }
-        slotService.registerRequest(21L);
         long userId = 21L;
-        Assertions.assertEquals(1, slotService.statusRequest(userId));
+        slotService.registerRequest(userId);
+
+        int positionInQueue = slotService.statusRequest(userId).getPositionInQueue();
+        Assertions.assertEquals(1, positionInQueue);
     }
 
     @Test
     public void testStatus_isPeople_alreadyInBuilding() {
         long userId = 1L;
         slotService.registerRequest(userId);
-        Assertions.assertEquals(-1, slotService.statusRequest(userId));
+        Assertions.assertEquals(StatusList.ALREADY_IN_BUILDING, slotService.statusRequest(userId).getStatus());
     }
 
     @Test
     public void testStatus_isPeople_notRegisteredYet() {
-        Assertions.assertEquals(0, slotService.statusRequest(1L));
+        Assertions.assertEquals(StatusList.NOT_REGISTERED, slotService.statusRequest(1L).getStatus());
     }
 
     @Test

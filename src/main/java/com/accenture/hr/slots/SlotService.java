@@ -1,16 +1,12 @@
 package com.accenture.hr.slots;
 
-import com.accenture.hr.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -49,13 +45,13 @@ public class SlotService {
     public int statusRequest(long userId) {
         int positionInQueue = 0;
         if (peopleWaiting.contains(userId)) {
-            positionInQueue = peopleWaiting.indexOf(userId);
+            positionInQueue = peopleWaiting.indexOf(userId) + 1;
         } else if (peopleInside.contains(userId)) {
+            positionInQueue = -1;
             log.error("User is already in building! UserId: {}", userId);
         } else {
-            log.error("User is not registered yet! UserId: {}", userId);
+            log.error("User is not registered yet! UserId: {}", 0L);
         }
         return positionInQueue;
     }
-
 }

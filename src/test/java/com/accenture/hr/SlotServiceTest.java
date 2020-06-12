@@ -65,4 +65,26 @@ public class SlotServiceTest {
         Assertions.assertEquals(1, peopleWaiting.size());
     }
 
+    @Test
+    public void testStatus_isPeople_waiting() {
+        for (int i = 1; i <= currentLimit; i++) {
+            slotService.registerRequest((long) i);
+        }
+        slotService.registerRequest(21L);
+        long userId = 21L;
+        Assertions.assertEquals(1, slotService.statusRequest(userId));
+    }
+
+    @Test
+    public void testStatus_isPeople_alreadyInBuilding() {
+        long userId = 1L;
+        slotService.registerRequest(userId);
+        Assertions.assertEquals(-1, slotService.statusRequest(userId));
+    }
+
+    @Test
+    public void testStatus_isPeople_notRegisteredYet() {
+        Assertions.assertEquals(0, slotService.statusRequest(1L));
+    }
+
 }

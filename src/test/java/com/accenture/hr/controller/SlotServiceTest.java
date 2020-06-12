@@ -1,7 +1,7 @@
-package com.accenture.hr.slots;
+package com.accenture.hr.controller;
 
 import com.accenture.hr.enums.StatusList;
-import com.accenture.hr.slots.SlotService;
+import com.accenture.hr.service.SlotService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ public class SlotServiceTest {
     public void testRegister_hasSpace_alreadyInside() {
         long userId = 1L;
         slotService.registerRequest(userId);
-        StatusList actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
+        StatusList actualStatus = slotService.registerRequest(userId).getStatus();
         Assertions.assertEquals(StatusList.ALREADY_IN_BUILDING, actualStatus);
     }
 
@@ -66,7 +66,7 @@ public class SlotServiceTest {
         long userId = 22L;
         Assertions.assertEquals(currentLimit, peopleInside.size());
         Assertions.assertEquals(1, peopleWaiting.size());
-        StatusList actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
+        StatusList actualStatus = slotService.registerRequest(userId).getStatus();
         Assertions.assertEquals(StatusList.TO_WAITING_LIST, actualStatus);
     }
 
@@ -92,7 +92,7 @@ public class SlotServiceTest {
 
         Assertions.assertEquals(currentLimit, peopleInside.size());
         Assertions.assertEquals(1, peopleWaiting.size());
-        StatusList actualStatus = slotService.registerRequest(userId).getRegistrationStatus();
+        StatusList actualStatus = slotService.registerRequest(userId).getStatus();
         Assertions.assertEquals(StatusList.ALREADY_ON_WAITING_LIST, actualStatus);
     }
 

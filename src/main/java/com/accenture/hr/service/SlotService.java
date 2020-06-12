@@ -1,4 +1,4 @@
-package com.accenture.hr.slots;
+package com.accenture.hr.service;
 
 import com.accenture.hr.enums.StatusList;
 import com.accenture.hr.responses.EntryResponse;
@@ -35,19 +35,19 @@ public class SlotService {
         RegisterResponse registerResponse = new RegisterResponse();
         if (peopleInside.contains(userId)) {
             log.error("User is already in building! UserId: {}", userId);
-            registerResponse.setRegistrationStatus(StatusList.ALREADY_IN_BUILDING);
+            registerResponse.setStatus(StatusList.ALREADY_IN_BUILDING);
         } else if (peopleWaiting.contains(userId)) {
             log.error("User is already on waitinglist! UserId: {}", userId);
-            registerResponse.setRegistrationStatus(StatusList.ALREADY_ON_WAITING_LIST);
+            registerResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
         } else {
             if (peopleInside.size() < currentLimit) {
                 peopleInside.add(userId);
                 log.debug("User checked into building! UserId: {}", userId);
-                registerResponse.setRegistrationStatus(StatusList.SUCCESS);
+                registerResponse.setStatus(StatusList.SUCCESS);
             } else {
                 peopleWaiting.add(userId);
                 log.debug("User placed on waitinglist! UserId: {}", userId);
-                registerResponse.setRegistrationStatus(StatusList.TO_WAITING_LIST);
+                registerResponse.setStatus(StatusList.TO_WAITING_LIST);
             }
         }
         return registerResponse;
@@ -55,6 +55,11 @@ public class SlotService {
 
     public StatusResponse statusRequest(long userId) {
         StatusResponse statusResponse = new StatusResponse();
+        if (!isValidUser(userId)) {
+            statusResponse.setStatus(StatusList.NOT_REGISTERED);
+            log.error("User is not registered yet! UserId: {}", userId);
+            return statusResponse;
+        }
         if (peopleWaiting.contains(userId)) {
             int positionInQueue = peopleWaiting.indexOf(userId) + 1;
             statusResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
@@ -62,15 +67,17 @@ public class SlotService {
         } else if (peopleInside.contains(userId)) {
             statusResponse.setStatus(StatusList.ALREADY_IN_BUILDING);
             log.error("User is already in building! UserId: {}", userId);
-        } else {
-            statusResponse.setStatus(StatusList.NOT_REGISTERED);
-            log.error("User is not registered yet! UserId: {}", userId);
         }
         return statusResponse;
     }
 
     public EntryResponse entryRequest(long userId) {
         EntryResponse entryResponse = new EntryResponse();
+        if (!isValidUser(userId)) {
+            entryResponse.setStatus(StatusList.NOT_REGISTERED);
+            log.error("User is not registered yet! UserId: {}", userId);
+            return entryResponse;
+        }
         int freeCapacity = currentLimit - peopleInside.size();
         int positionInQueue = peopleWaiting.indexOf(userId);
         if (positionInQueue < freeCapacity) {
@@ -97,5 +104,9 @@ public class SlotService {
             exitResponse.setStatus(StatusList.SUCCESS);
         }
         return exitResponse;
+    }
+
+    public boolean isValidUser(long userId) {
+        return peopleWaiting.contains(userId) && peopleInside.contains(userId);
     }
 }

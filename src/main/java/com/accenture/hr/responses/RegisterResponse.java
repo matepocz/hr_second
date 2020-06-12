@@ -6,11 +6,11 @@ public class RegisterResponse {
 
     private StatusList registrationStatus;
 
-    public StatusList getRegistrationStatus() {
+    public StatusList getStatus() {
         return registrationStatus;
     }
 
-    public void setRegistrationStatus(StatusList registrationStatus) {
+    public void setStatus(StatusList registrationStatus) {
         this.registrationStatus = registrationStatus;
     }
 }

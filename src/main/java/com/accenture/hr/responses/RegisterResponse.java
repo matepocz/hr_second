@@ -1,16 +1,16 @@
 package com.accenture.hr.responses;
 
-import com.accenture.hr.enums.RegistrationStatus;
+import com.accenture.hr.enums.StatusList;
 
 public class RegisterResponse {
 
-    private RegistrationStatus registrationStatus;
+    private StatusList registrationStatus;
 
-    public RegistrationStatus getRegistrationStatus() {
+    public StatusList getRegistrationStatus() {
         return registrationStatus;
     }
 
-    public void setRegistrationStatus(RegistrationStatus registrationStatus) {
+    public void setRegistrationStatus(StatusList registrationStatus) {
         this.registrationStatus = registrationStatus;
     }
 }

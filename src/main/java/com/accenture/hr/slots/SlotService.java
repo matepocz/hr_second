@@ -1,5 +1,7 @@
 package com.accenture.hr.slots;
 
+import com.accenture.hr.enums.RegistrationStatus;
+import com.accenture.hr.responses.RegisterResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +28,26 @@ public class SlotService {
         this.peopleWaiting = peopleWaiting;
     }
 
-    public void registerRequest(Long userId) {
+    public RegisterResponse registerRequest(Long userId) {
+        RegisterResponse registerResponse = new RegisterResponse();
         if (peopleInside.contains(userId)) {
             log.error("User is already in building! UserId: {}", userId);
+            registerResponse.setRegistrationStatus(RegistrationStatus.ALREADY_IN_BUILDING);
         } else if (peopleWaiting.contains(userId)) {
             log.error("User is already on waitinglist! UserId: {}", userId);
+            registerResponse.setRegistrationStatus(RegistrationStatus.ALREADY_ON_WAITING_LIST);
         } else {
             if (peopleInside.size() < currentLimit) {
                 peopleInside.add(userId);
                 log.debug("User checked into building! UserId: {}", userId);
+                registerResponse.setRegistrationStatus(RegistrationStatus.SUCCESS);
             } else {
                 peopleWaiting.add(userId);
                 log.debug("User placed on waitinglist! UserId: {}", userId);
+                registerResponse.setRegistrationStatus(RegistrationStatus.TO_WAITING_LIST);
             }
         }
+        return registerResponse;
     }
 
     public int statusRequest(long userId) {

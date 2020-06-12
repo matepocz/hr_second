@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/slots")
 public class SlotController {
 
-    private SlotService slotService;
+    private final SlotService slotService;
 
     @Autowired
     public SlotController(SlotService slotService) {

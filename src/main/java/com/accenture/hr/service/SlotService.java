@@ -31,12 +31,12 @@ public class SlotService {
     }
 
     /**
-     * Registers the user by it's unique user ID
+     * Registers the user by the unique user ID
      * </p>
      * Puts the user to a waiting list if there
      * is no free capacity in the building.
      * @param userId the ID of the user
-     * @return A RegisterResponse containing an enum
+     * @return A RegisterResponse containing an enum with the result
      */
     public RegisterResponse registerRequest(Long userId) {
         RegisterResponse registerResponse = new RegisterResponse();
@@ -65,10 +65,10 @@ public class SlotService {
     }
 
     /**
-     * Get a user's current status by its ID
+     * Get the current status of a user by ID
      * @param userId the ID of the user
      * @return A StatusResponse containing an enum with
-     * the result, also the user's position in the waiting list.
+     * the result, also the user's position in the queue.
      */
     public StatusResponse statusRequest(long userId) {
         StatusResponse statusResponse = new StatusResponse();

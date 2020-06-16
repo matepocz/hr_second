@@ -135,7 +135,7 @@ public class SlotService {
         ExitResponse exitResponse = new ExitResponse();
         if (!peopleInside.contains(userId)) {
             log.error("User is currently not in the building! UserId: {}", userId);
-            exitResponse.setStatus(StatusList.FAIL);
+            exitResponse.setStatus(StatusList.NOT_REGISTERED);
         } else {
             peopleInside.remove(userId);
             log.debug("User exited the building! UserId: {}", userId);

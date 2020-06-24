@@ -7,9 +7,16 @@ import com.accenture.hr.responses.RegisterResponse;
 import com.accenture.hr.responses.StatusResponse;
 import com.accenture.hr.service.SlotService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/v1/slots")
@@ -56,5 +63,19 @@ public class SlotController {
         return status.equals(StatusList.NOT_REGISTERED) ?
                 new ResponseEntity<>(exitResponse, HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(exitResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-file/{fileName}")
+    public ResponseEntity<byte[]> downloadFileFromLocal(@PathVariable String fileName) {
+        byte[] data = null;
+        try {
+            File file = new File("src/main/resources/test.jpg");
+            Path fileLocation = Paths.get(String.valueOf(file));
+            data = Files.readAllBytes(fileLocation);
+            file.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(data);
     }
 }

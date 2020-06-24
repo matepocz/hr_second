@@ -5,12 +5,21 @@ import com.accenture.hr.responses.EntryResponse;
 import com.accenture.hr.responses.ExitResponse;
 import com.accenture.hr.responses.RegisterResponse;
 import com.accenture.hr.responses.StatusResponse;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.process.ImageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -22,6 +31,7 @@ public class SlotService {
     private final Integer currentLimit;
     private final List<Long> peopleInside;
     private final List<Long> peopleWaiting;
+
 
     @Autowired
     public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting) {
@@ -151,5 +161,25 @@ public class SlotService {
      */
     public boolean userNotFound(long userId) {
         return !peopleWaiting.contains(userId) && !peopleInside.contains(userId);
+    }
+
+    public void testImgEditting(){
+        ImagePlus imagePlus = IJ.openImage("src/main/resources/Accenture_2round_chairs.jpg");
+        ImageProcessor ip = imagePlus.getProcessor();
+        ip.setColor(Color.red);
+        ip.setLineWidth(4);
+        ip.drawRect(100, 100, imagePlus.getWidth() - 1910, imagePlus.getHeight() - 1070);
+
+ //       imagePlus.show();
+        BufferedImage newImg = imagePlus.getBufferedImage();
+
+        try {
+            File outputfile = new File("src/main/resources/test.jpg");
+            ImageIO.write(newImg, "jpg", outputfile);
+        } catch (IOException e) {
+            System.out.println(e.getStackTrace());
+        }
+
+
     }
 }

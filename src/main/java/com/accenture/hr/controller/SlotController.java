@@ -7,13 +7,13 @@ import com.accenture.hr.responses.RegisterResponse;
 import com.accenture.hr.responses.StatusResponse;
 import com.accenture.hr.service.SlotService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,6 +21,9 @@ import java.nio.file.Paths;
 @RestController
 @RequestMapping("/api/v1/slots")
 public class SlotController {
+
+    private static final String WORKSPACE_ASSIGNED_TO_USER = "src/asset/users_workspace.jpg";
+    private static final String CURRENT_LAYOUT = "src/main/resources/current_layout.jpg";
 
     private final SlotService slotService;
 
@@ -69,7 +72,7 @@ public class SlotController {
     public ResponseEntity<byte[]> downloadFileFromLocal(@PathVariable String fileName) {
         byte[] data = null;
         try {
-            File file = new File("src/main/resources/users_chair.jpg");
+            File file = new File(WORKSPACE_ASSIGNED_TO_USER);
             Path fileLocation = Paths.get(String.valueOf(file));
             data = Files.readAllBytes(fileLocation);
             file.delete();
@@ -83,7 +86,7 @@ public class SlotController {
     public ResponseEntity<byte[]> getCurrentLayout() {
         byte[] data = null;
         try {
-            File file = new File("src/main/resources/current_layout.jpg");
+            File file = new File(CURRENT_LAYOUT);
             Path fileLocation = Paths.get(String.valueOf(file));
             data = Files.readAllBytes(fileLocation);
         } catch (IOException e) {
@@ -91,6 +94,4 @@ public class SlotController {
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(data);
     }
-
-
 }

@@ -26,11 +26,11 @@ public class SlotService {
 
 
     @Autowired
-    public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting, List<Long> vipPersonList) {
+    public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting, List<Long> vipPersons) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
         this.peopleWaiting = peopleWaiting;
-        this.vipPersons = vipPersonList;
+        this.vipPersons = vipPersons;
     }
 
     /**

@@ -40,11 +40,11 @@ public class HrApplication {
     }
 
     @Bean
-    public List<Long> vipPersonList() {
+    public List<Long> vipPersons() {
         List<Long> vipPersonList = new ArrayList<>();
         String[] vipPersonsUserIds = vipPersons.split(",");
-        for (String vipPersonsUserId : vipPersonsUserIds) {
-            vipPersonList.add(Long.parseLong(vipPersonsUserId));
+        for (String vipPersonId : vipPersonsUserIds) {
+            vipPersonList.add(Long.parseLong(vipPersonId));
         }
         return vipPersonList;
     }

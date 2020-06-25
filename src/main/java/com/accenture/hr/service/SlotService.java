@@ -158,6 +158,6 @@ public class SlotService {
      * @return A boolean that shows the result
      */
     public boolean userNotFound(long userId) {
-        return !peopleWaiting.contains(userId) && !peopleInside.contains(userId);
+        return !peopleWaiting.contains(userId) && !peopleInside.contains(userId) && !vipPersons.contains(userId);
     }
 }

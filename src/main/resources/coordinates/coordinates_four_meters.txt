@@ -1,0 +1,7 @@
+imageService.drawWorkSpace(738, 95, Color.RED);
+imageService.drawWorkSpace(776, 145, Color.RED);
+imageService.drawWorkSpace(738, 192, Color.RED);
+imageService.drawWorkSpace(738, 295, Color.RED);
+imageService.drawWorkSpace(776, 347, Color.RED);
+imageService.drawWorkSpace(738, 398, Color.RED);
+imageService.drawWorkSpace(776, 451, Color.RED);

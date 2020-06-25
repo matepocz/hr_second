@@ -5,7 +5,7 @@ import com.accenture.hr.service.ImageService;
 
 public class WorkSpace {
 
-    private ImageService imageService;
+    private final ImageService imageService;
 
     private final int x;
     private final int y;

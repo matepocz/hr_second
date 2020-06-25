@@ -143,7 +143,7 @@ public class SlotServiceTest {
 
     @Test
     public void testExit_isPeople_currentlyNotInBuilding() {
-        Assertions.assertEquals(StatusList.FAIL, slotService.exitRequest(4L).getStatus());
+        Assertions.assertEquals(StatusList.NOT_REGISTERED, slotService.exitRequest(4L).getStatus());
     }
 
     @Test

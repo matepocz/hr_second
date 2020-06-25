@@ -34,5 +34,4 @@ public class HrApplication {
     public Integer currentLimit() {
         return (int) (maxCapacity * ((double) currentAllowancePercent / 100));
     }
-
 }

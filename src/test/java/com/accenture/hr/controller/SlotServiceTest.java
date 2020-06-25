@@ -153,10 +153,4 @@ public class SlotServiceTest {
         Assertions.assertEquals(StatusList.SUCCESS, slotService.exitRequest(1L).getStatus());
         Assertions.assertEquals(1, peopleInside.size());
     }
-
-    @Test
-    public void testImgEditting(){
-        slotService.testImgEditting();
-
-    }
 }

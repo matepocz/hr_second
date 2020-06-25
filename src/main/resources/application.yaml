@@ -13,6 +13,8 @@ logging:
   level:
     com.accenture.hr: trace
 
+currentSafetyDistance: 5
+
 maxCapacity: 250
 currentAllowancePercent: 10
 

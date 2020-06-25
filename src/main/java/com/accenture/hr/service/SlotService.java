@@ -5,21 +5,12 @@ import com.accenture.hr.responses.EntryResponse;
 import com.accenture.hr.responses.ExitResponse;
 import com.accenture.hr.responses.RegisterResponse;
 import com.accenture.hr.responses.StatusResponse;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.process.ImageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -45,6 +36,7 @@ public class SlotService {
      * </p>
      * Puts the user to a waiting list if there
      * is no free capacity in the building.
+     *
      * @param userId the ID of the user
      * @return A RegisterResponse containing an enum with the result
      */
@@ -76,6 +68,7 @@ public class SlotService {
 
     /**
      * Get the current status of a user by ID
+     *
      * @param userId the ID of the user
      * @return A StatusResponse containing an enum with
      * the result, also the user's position in the queue.
@@ -107,6 +100,7 @@ public class SlotService {
      * </p>
      * If there is no free capacity in the building
      * puts the user to the waiting queue
+     *
      * @param userId the ID of the user
      * @return An EntryResponse containing an enum with the result
      */
@@ -138,6 +132,7 @@ public class SlotService {
     /**
      * Attempts to check out the user from the building
      * by its user ID
+     *
      * @param userId the ID of the user
      * @return An ExitResponse containing an enum with the result
      */
@@ -156,30 +151,11 @@ public class SlotService {
 
     /**
      * Checks whether the given user ID exists
+     *
      * @param userId the ID of the user
      * @return A boolean that shows the result
      */
     public boolean userNotFound(long userId) {
         return !peopleWaiting.contains(userId) && !peopleInside.contains(userId);
-    }
-
-    public void testImgEditting(){
-        ImagePlus imagePlus = IJ.openImage("src/main/resources/Accenture_2round_chairs.jpg");
-        ImageProcessor ip = imagePlus.getProcessor();
-        ip.setColor(Color.red);
-        ip.setLineWidth(4);
-        ip.drawRect(100, 100, imagePlus.getWidth() - 1910, imagePlus.getHeight() - 1070);
-
- //       imagePlus.show();
-        BufferedImage newImg = imagePlus.getBufferedImage();
-
-        try {
-            File outputfile = new File("src/main/resources/test.jpg");
-            ImageIO.write(newImg, "jpg", outputfile);
-        } catch (IOException e) {
-            System.out.println(e.getStackTrace());
-        }
-
-
     }
 }

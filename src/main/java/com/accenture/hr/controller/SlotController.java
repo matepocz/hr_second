@@ -69,7 +69,7 @@ public class SlotController {
     public ResponseEntity<byte[]> downloadFileFromLocal(@PathVariable String fileName) {
         byte[] data = null;
         try {
-            File file = new File("src/main/resources/test.jpg");
+            File file = new File("src/main/resources/users_chair.jpg");
             Path fileLocation = Paths.get(String.valueOf(file));
             data = Files.readAllBytes(fileLocation);
             file.delete();
@@ -78,4 +78,19 @@ public class SlotController {
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(data);
     }
+
+    @GetMapping("/layout")
+    public ResponseEntity<byte[]> getCurrentLayout() {
+        byte[] data = null;
+        try {
+            File file = new File("src/main/resources/current_layout.jpg");
+            Path fileLocation = Paths.get(String.valueOf(file));
+            data = Files.readAllBytes(fileLocation);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(data);
+    }
+
+
 }

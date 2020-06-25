@@ -17,6 +17,8 @@ public class HrApplication {
     private int currentAllowancePercent;
     @Value("${currentSafetyDistance}")
     private int currentSafetyDistance;
+    @Value("${vipPersons}")
+    private String vipPersons;
 
     public static void main(String[] args) {
         SpringApplication.run(HrApplication.class, args);
@@ -35,6 +37,16 @@ public class HrApplication {
     @Bean
     public Integer currentLimit() {
         return (int) (maxCapacity * ((double) currentAllowancePercent / 100));
+    }
+
+    @Bean
+    public List<Long> vipPersonList() {
+        List<Long> vipPersonList = new ArrayList<>();
+        String[] vipPersonsUserIds = vipPersons.split(",");
+        for (String vipPersonsUserId : vipPersonsUserIds) {
+            vipPersonList.add(Long.parseLong(vipPersonsUserId));
+        }
+        return vipPersonList;
     }
 
     @Bean

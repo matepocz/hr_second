@@ -1,19 +1,17 @@
 package com.accenture.hr.controller;
 
 import com.accenture.hr.service.ImageService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.awt.*;
 
+@SpringBootTest
 public class ImageServiceTest {
 
+    @Autowired
     private ImageService imageService;
-
-    @BeforeEach
-    public void init() {
-        this.imageService = new ImageService();
-    }
 
     @Test
     public void testImgEditing() {

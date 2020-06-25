@@ -24,6 +24,7 @@ public class CoordinateService {
 
     public List<WorkSpace> getAllowedWorkSpaces() {
         List<WorkSpace> allowedWorkSpaces = new ArrayList<>();
+        ImageService imageService = new ImageService();
         Path filePath = Paths.get(fileName);
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
             String line;
@@ -31,7 +32,7 @@ public class CoordinateService {
                 String[] coords = line.split(",");
                 int x = Integer.parseInt(coords[0]);
                 int y = Integer.parseInt(coords[1]);
-                WorkSpace workSpace = new WorkSpace(x, y);
+                WorkSpace workSpace = new WorkSpace(x, y, imageService);
                 allowedWorkSpaces.add(workSpace);
             }
         } catch (NumberFormatException | IOException e) {

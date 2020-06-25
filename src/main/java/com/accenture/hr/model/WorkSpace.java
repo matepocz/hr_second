@@ -10,6 +10,7 @@ public class WorkSpace {
     private final int x;
     private final int y;
     private WorkSpaceStatus status;
+    private long userId;
 
     public WorkSpace(int x, int y, ImageService imageService) {
         this.x = x;
@@ -22,5 +23,9 @@ public class WorkSpace {
         this.status = status;
         imageService.drawWorkSpace(x, y, status.getColor());
         return status;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

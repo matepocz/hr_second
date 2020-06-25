@@ -13,7 +13,9 @@ logging:
   level:
     com.accenture.hr: trace
 
-currentSafetyDistance: 2
+vipPersons: 995,996,997,998,999
+
+currentSafetyDistance: 1
 
 maxCapacity: 250
 currentAllowancePercent: 10

@@ -22,9 +22,11 @@ public class ImageService {
 
     private static final String ABS_CURRENT_LAYOUT = "/home/student/mentoring/students/accenture-contest/src/main/resources/images/office_layout.jpg";
     private static final String CURRENT_LAYOUT = "images/office_layout.jpg";
+    private static final String TEMP_LAYOUT = "src/main/resources/test.jpg";
 
     public void drawWorkSpace(int x, int y, Color color) {
-        String tempFilePath = getImgFile(CURRENT_LAYOUT).getPath();
+        String tempFilePath = getImgFile(CURRENT_LAYOUT);
+
         ImagePlus imagePlus = IJ.openImage(tempFilePath);
         ImageProcessor ip = imagePlus.getProcessor();
         ip.setColor(color);
@@ -34,23 +36,22 @@ public class ImageService {
         BufferedImage newImg = imagePlus.getBufferedImage();
 
         try {
-            File outputFile = new File(tempFilePath);
+            File outputFile = new File(TEMP_LAYOUT);
             ImageIO.write(newImg, "jpg", outputFile);
         } catch (IOException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
     }
 
-    public File getImgFile(String pathInResources) {
+    public String getImgFile(String pathInResources) {
         Resource resource = new ClassPathResource(pathInResources);
         File imgFile = null;
-        try (InputStream inputStream = resource.getInputStream()) {
-            imgFile = File.createTempFile("tempImg", ".jpg");
-            FileUtils.copyInputStreamToFile(inputStream, imgFile);
+        try {
+            imgFile = resource.getFile();
         } catch (IOException e) {
             String warnMessage = "IO error, while loading file from path: '" + pathInResources + "'";
-            log.warn(warnMessage);
+            e.printStackTrace();
         }
-        return imgFile;
+        return imgFile.getPath();
     }
 }

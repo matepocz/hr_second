@@ -7,16 +7,12 @@ import com.accenture.hr.responses.EntryResponse;
 import com.accenture.hr.responses.ExitResponse;
 import com.accenture.hr.responses.RegisterResponse;
 import com.accenture.hr.responses.StatusResponse;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -38,8 +34,7 @@ public class SlotService {
 
     @Autowired
     public SlotService(int currentLimit, List<Long> peopleInside, WaitingList<Long> peopleWaiting,
-                       List<Long> vipPersons, CoordinateService coordinateService)
-    {
+                       List<Long> vipPersons, CoordinateService coordinateService) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
         this.peopleWaiting = peopleWaiting;
@@ -71,7 +66,7 @@ public class SlotService {
     }
 
     private void putUserToCorrespondingList(Long userId, RegisterResponse registerResponse) {
-        if (peopleInside.size() < currentLimit) {
+        if (peopleInside.size() < currentLimit || vipPersons.contains(userId)) {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
             registerResponse.setStatus(StatusList.SUCCESS);
@@ -146,9 +141,9 @@ public class SlotService {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
             entryResponse.setStatus(StatusList.SUCCESS);
+            log.debug("User entered into building! UserId: {}", userId);
             //TODO send it as a response
             assignWorkSpaceToUser(userId);
-            log.debug("User entered into building! UserId: {}", userId);
         } else {
             entryResponse.setStatus(StatusList.FAIL);
             log.debug("No free capacity, User stays in waiting list! UserId: {}", userId);
@@ -170,9 +165,9 @@ public class SlotService {
             exitResponse.setStatus(StatusList.NOT_REGISTERED);
         } else {
             peopleInside.remove(userId);
-            log.debug("User exited the building! UserId: {}", userId);
-            deAssignWorkSpace(userId);
             exitResponse.setStatus(StatusList.SUCCESS);
+            deAssignWorkSpace(userId);
+            log.debug("User exited the building! UserId: {}", userId);
         }
         return exitResponse;
     }

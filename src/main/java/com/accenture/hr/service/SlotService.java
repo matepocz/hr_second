@@ -80,7 +80,6 @@ public class SlotService {
 
     public void sendMessage(String message) {
         log.info(String.format("#### -> Producing message -> %s", message));
-        System.out.println("TOPIC NAME : ==>> " + TOPIC);
         ProducerRecord<String, String> proMessage = new ProducerRecord<>(TOPIC, message);
         this.kafkaTemplate.send(proMessage);
     }
@@ -178,7 +177,7 @@ public class SlotService {
         return !peopleWaiting.contains(userId) && !peopleInside.contains(userId) && !vipPersons.contains(userId);
     }
 
-    @KafkaListener(topics = TOPIC, groupId = "group-id")
+    @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
     public void consume(String message) throws IOException {
         log.info(String.format("#### -> Consumed message -> %s", message));
     }

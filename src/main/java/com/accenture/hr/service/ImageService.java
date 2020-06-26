@@ -17,10 +17,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+
 public class ImageService {
     private static final Logger log = LoggerFactory.getLogger(ImageService.class);
 
-   // private static final String CURRENT_LAYOUT = "src/main/resources/images/office_layout.jpg";
+    // private static final String CURRENT_LAYOUT = "src/main/resources/images/office_layout.jpg";
     private static final String ABS_CURRENT_LAYOUT = "/home/student/mentoring/students/accenture-contest/src/main/resources/images/office_layout.jpg";
     private static final String CURRENT_LAYOUT = "images/office_layout.jpg";
 
@@ -54,4 +55,5 @@ public class ImageService {
         }
         return imgFile;
     }
+
 }

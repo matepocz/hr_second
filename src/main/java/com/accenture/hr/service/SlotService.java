@@ -70,6 +70,7 @@ public class SlotService {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
             registerResponse.setStatus(StatusList.SUCCESS);
+            //TODO send as a response
             assignWorkSpaceToUser(userId);
             //  this.sendMessage("User with id of: " + userId + " in waiting list");
         } else {

@@ -25,17 +25,17 @@ public class SlotService {
 
     private final int currentLimit;
     private final List<Long> peopleInside;
-    private final List<Long> peopleWaiting;
+    private final WaitingList<Long> peopleWaiting;
     private final List<Long> vipPersons;
     private final CoordinateService coordinateService;
 
     public static final String TOPIC = "stand_in_Waiting_List";
 
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+//    @Autowired
+//    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public SlotService(int currentLimit, List<Long> peopleInside, List<Long> peopleWaiting,
+    public SlotService(int currentLimit, List<Long> peopleInside, WaitingList<Long> peopleWaiting,
                        List<Long> vipPersons, CoordinateService coordinateService)
     {
         this.currentLimit = currentLimit;
@@ -73,7 +73,7 @@ public class SlotService {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
             registerResponse.setStatus(StatusList.SUCCESS);
-            this.sendMessage("User with id of: " + userId + " in waiting list");
+          //  this.sendMessage("User with id of: " + userId + " in waiting list");
             //TODO assign a workspace to user, also send it as a response
         } else {
             peopleWaiting.add(userId);
@@ -82,11 +82,6 @@ public class SlotService {
         }
     }
 
-    public void sendMessage(String message) {
-        log.info(String.format("#### -> Producing message -> %s", message));
-        ProducerRecord<String, String> proMessage = new ProducerRecord<>(TOPIC, message);
-        this.kafkaTemplate.send(proMessage);
-    }
 
     /**
      * Get the current status of a user by ID
@@ -183,8 +178,8 @@ public class SlotService {
         return !peopleWaiting.contains(userId) && !peopleInside.contains(userId) && !vipPersons.contains(userId);
     }
 
-    @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
-    public void consume(String message) throws IOException {
-        log.info(String.format("#### -> Consumed message -> %s", message));
-    }
+//    @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
+//    public void consume(String message) throws IOException {
+//        log.info(String.format("#### -> Consumed message -> %s", message));
+//    }
 }

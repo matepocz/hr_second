@@ -1,7 +1,9 @@
 package com.accenture.hr.controller;
 
 import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.service.CoordinateService;
 import com.accenture.hr.service.SlotService;
+import com.accenture.hr.service.WaitingList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +16,15 @@ import java.util.*;
 public class SlotServiceTest {
 
     private SlotService slotService;
+    private CoordinateService coordinateService;
     private final Integer currentLimit = 10;
     private final List<Long> peopleInside = new ArrayList<>();
-    private final List<Long> peopleWaiting = new ArrayList<>();
+    private final WaitingList<Long> peopleWaiting = new WaitingList<>();
     private final List<Long> WipPersons = new ArrayList<>();
 
     @BeforeEach
     private void init() {
-        slotService = new SlotService(currentLimit, peopleInside, peopleWaiting, WipPersons);
+        slotService = new SlotService(currentLimit, peopleInside, peopleWaiting, WipPersons, coordinateService);
     }
 
     @Test

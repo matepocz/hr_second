@@ -31,7 +31,7 @@ public class HrApplication {
     }
 
     @Bean
-    public List<Long> peopleWaiting() {
+    public WaitingList<Long> peopleWaiting() {
         return new WaitingList<>();
     }
 

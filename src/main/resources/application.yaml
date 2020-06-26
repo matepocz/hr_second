@@ -32,6 +32,6 @@ vipPersons: 995,996,997,998,999
 currentSafetyDistance: 1
 
 maxCapacity: 250
-currentAllowancePercent: 10
+currentAllowancePercent: 1
 
 cors-policies: http://localhost:3000, http://127.0.0.1:3000

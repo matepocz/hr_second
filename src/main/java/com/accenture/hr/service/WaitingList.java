@@ -1,8 +1,22 @@
 package com.accenture.hr.service;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+
 import java.util.ArrayList;
 
+import static com.accenture.hr.service.SlotService.TOPIC;
+
 public class WaitingList<E> extends ArrayList<E> {
+
+    private static final Logger log = LoggerFactory.getLogger(WaitingList.class);
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public boolean add(E e) {
@@ -12,13 +26,20 @@ public class WaitingList<E> extends ArrayList<E> {
     }
 
     @Override
-    public E remove(int index) {
-        E object = super.remove(index);
+    public boolean remove(Object index) {
+        boolean removed = super.remove(index);
         callBack();
-        return object;
+        return removed;
     }
 
     public void callBack() {
-        System.out.println("in callback");
+        System.out.println("==> List in callback");
+        ProducerRecord<String, String> message = new ProducerRecord<>(TOPIC, " => List get call");
+        kafkaTemplate.send(message);
+    }
+
+    @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
+    public void consume(String message) {
+        log.info(String.format("#### -> Consumed message -> %s", message));
     }
 }

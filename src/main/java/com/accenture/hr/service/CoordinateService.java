@@ -3,6 +3,7 @@ package com.accenture.hr.service;
 import com.accenture.hr.model.WorkSpace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,17 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class CoordinateService {
 
     private final String fileName;
+    private final List<WorkSpace> allowedWorkSpaces = new ArrayList<>();
 
     @Autowired
-    public CoordinateService(String fileName) {
-        this.fileName = fileName;
+    public CoordinateService(String fileNameByCurrentSafetyDistance) {
+        this.fileName = fileNameByCurrentSafetyDistance;
     }
 
-    public List<WorkSpace> getAllowedWorkSpaces() {
-        List<WorkSpace> allowedWorkSpaces = new ArrayList<>();
+    public List<WorkSpace> getAllowedWorkSpacesFromFile() {
         ImageService imageService = new ImageService();
         Path filePath = Paths.get(fileName);
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {

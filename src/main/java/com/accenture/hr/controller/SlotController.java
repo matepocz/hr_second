@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 public class SlotController {
 
     private static final String WORKSPACE_ASSIGNED_TO_USER = "src/asset/users_workspace.jpg";
-    private static final String CURRENT_LAYOUT = "src/main/resources/current_layout.jpg";
+    private static final String CURRENT_LAYOUT = "src/main/resources/images/temp_layout.jpg";
 
     private final SlotService slotService;
 

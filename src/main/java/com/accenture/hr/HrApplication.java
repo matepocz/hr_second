@@ -1,5 +1,6 @@
 package com.accenture.hr;
 
+import com.accenture.hr.service.WaitingList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +32,7 @@ public class HrApplication {
 
     @Bean
     public List<Long> peopleWaiting() {
-        return new ArrayList<>();
+        return new WaitingList<>();
     }
 
     @Bean

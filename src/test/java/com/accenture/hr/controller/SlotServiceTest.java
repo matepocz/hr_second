@@ -17,10 +17,11 @@ public class SlotServiceTest {
     private final Integer currentLimit = 10;
     private final List<Long> peopleInside = new ArrayList<>();
     private final List<Long> peopleWaiting = new ArrayList<>();
+    private final List<Long> WipPersons = new ArrayList<>();
 
     @BeforeEach
     private void init() {
-        slotService = new SlotService(currentLimit, peopleInside, peopleWaiting);
+        slotService = new SlotService(currentLimit, peopleInside, peopleWaiting, WipPersons);
     }
 
     @Test

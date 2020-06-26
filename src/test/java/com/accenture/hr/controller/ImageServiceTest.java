@@ -10,12 +10,13 @@ import java.awt.*;
 @SpringBootTest
 public class ImageServiceTest {
 
-    @Autowired
-    private ImageService imageService;
+    private ImageService imageService = new ImageService();
 
     @Test
     public void testImgEditing() {
-        imageService.testImgEditing(715, 100, 20, 10, Color.RED);
-        imageService.testImgEditing(765, 100, 20, 10, Color.BLACK);
+
+        imageService.drawWorkSpace(715,100, Color.BLACK);
+       // imageService.testImgEditing(715, 100, 20, 10, Color.RED);
+        // imageService.testImgEditing(765, 100, 20, 10, Color.BLACK);
     }
 }

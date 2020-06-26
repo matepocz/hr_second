@@ -23,10 +23,11 @@ public class SlotService {
 
     private static final Logger log = LoggerFactory.getLogger(SlotService.class);
 
-    private final Integer currentLimit;
+    private final int currentLimit;
     private final List<Long> peopleInside;
     private final List<Long> peopleWaiting;
     private final List<Long> vipPersons;
+    private final CoordinateService coordinateService;
 
     public static final String TOPIC = "stand_in_Waiting_List";
 
@@ -34,12 +35,14 @@ public class SlotService {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting,
-                       List<Long> vipPersons) {
+    public SlotService(int currentLimit, List<Long> peopleInside, List<Long> peopleWaiting,
+                       List<Long> vipPersons, CoordinateService coordinateService)
+    {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
         this.peopleWaiting = peopleWaiting;
         this.vipPersons = vipPersons;
+        this.coordinateService = coordinateService;
     }
 
     /**
@@ -71,6 +74,7 @@ public class SlotService {
             log.debug("User checked into building! UserId: {}", userId);
             registerResponse.setStatus(StatusList.SUCCESS);
             this.sendMessage("User with id of: " + userId + " in waiting list");
+            //TODO assign a workspace to user, also send it as a response
         } else {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
@@ -139,6 +143,7 @@ public class SlotService {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
             entryResponse.setStatus(StatusList.SUCCESS);
+            //TODO assign a workspace to user, also send it as a response
             log.debug("User entered into building! UserId: {}", userId);
         } else {
             entryResponse.setStatus(StatusList.FAIL);
@@ -162,6 +167,7 @@ public class SlotService {
         } else {
             peopleInside.remove(userId);
             log.debug("User exited the building! UserId: {}", userId);
+            //TODO re-color the workspace after user left the building
             exitResponse.setStatus(StatusList.SUCCESS);
         }
         return exitResponse;

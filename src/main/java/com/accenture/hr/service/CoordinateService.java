@@ -1,5 +1,6 @@
 package com.accenture.hr.service;
 
+import com.accenture.hr.enums.WorkSpaceStatus;
 import com.accenture.hr.model.WorkSpace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,12 @@ public class CoordinateService {
         this.fileName = fileNameByCurrentSafetyDistance;
     }
 
-    public List<WorkSpace> getAllowedWorkSpacesFromFile() {
+    public void getAllowedWorkSpacesFromFile() {
         ImageService imageService = new ImageService();
         Path filePath = Paths.get(fileName);
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 String[] coords = line.split(",");
                 int x = Integer.parseInt(coords[0]);
                 int y = Integer.parseInt(coords[1]);
@@ -40,7 +41,14 @@ public class CoordinateService {
         } catch (NumberFormatException | IOException e) {
             e.printStackTrace();
         }
+    }
 
-        return allowedWorkSpaces;
+    public WorkSpace getNextAvailableWorkSpace() {
+        for (WorkSpace allowedWorkSpace : allowedWorkSpaces) {
+            if (allowedWorkSpace.getStatus().equals(WorkSpaceStatus.FREE)) {
+                return allowedWorkSpace;
+            }
+        }
+        return null;
     }
 }

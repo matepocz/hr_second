@@ -28,4 +28,8 @@ public class WorkSpace {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+
+    public WorkSpaceStatus getStatus() {
+        return status;
+    }
 }

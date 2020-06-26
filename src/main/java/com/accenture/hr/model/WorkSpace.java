@@ -32,4 +32,8 @@ public class WorkSpace {
     public WorkSpaceStatus getStatus() {
         return status;
     }
+
+    public long getUserId() {
+        return userId;
+    }
 }

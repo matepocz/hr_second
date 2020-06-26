@@ -32,6 +32,7 @@ public class ImageService {
         ip.setColor(color);
         ip.drawOval(x - 3, y - 3, 6, 6);
         ip.drawOval(x - 10, y - 10, 20, 20);
+        log.debug(String.format("Workspace colored to %s", color));
 
         BufferedImage newImg = imagePlus.getBufferedImage();
 

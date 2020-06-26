@@ -5,9 +5,11 @@ import com.accenture.hr.responses.EntryResponse;
 import com.accenture.hr.responses.ExitResponse;
 import com.accenture.hr.responses.RegisterResponse;
 import com.accenture.hr.responses.StatusResponse;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +26,15 @@ public class SlotService {
     private final List<Long> peopleWaiting;
     private final List<Long> vipPersons;
 
+    public static final String TOPIC = "stand_in_Waiting_List";
 
     @Autowired
-    public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting, List<Long> vipPersons) {
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+
+    @Autowired
+    public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting,
+                       List<Long> vipPersons) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
         this.peopleWaiting = peopleWaiting;
@@ -61,11 +69,19 @@ public class SlotService {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
             registerResponse.setStatus(StatusList.SUCCESS);
+            this.sendMessage("User with id of: " + userId + " in waiting list");
         } else {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
             registerResponse.setStatus(StatusList.TO_WAITING_LIST);
         }
+    }
+
+    public void sendMessage(String message) {
+        log.info(String.format("#### -> Producing message -> %s", message));
+        System.out.println("TOPIC NAME : ==>> " + TOPIC);
+        ProducerRecord<String, String> proMessage = new ProducerRecord<>(TOPIC, message);
+        this.kafkaTemplate.send(proMessage);
     }
 
     /**

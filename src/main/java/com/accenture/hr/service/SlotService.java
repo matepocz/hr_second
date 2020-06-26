@@ -1,6 +1,8 @@
 package com.accenture.hr.service;
 
 import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.enums.WorkSpaceStatus;
+import com.accenture.hr.model.WorkSpace;
 import com.accenture.hr.responses.EntryResponse;
 import com.accenture.hr.responses.ExitResponse;
 import com.accenture.hr.responses.RegisterResponse;
@@ -73,8 +75,8 @@ public class SlotService {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
             registerResponse.setStatus(StatusList.SUCCESS);
-          //  this.sendMessage("User with id of: " + userId + " in waiting list");
-            //TODO assign a workspace to user, also send it as a response
+            assignWorkSpaceToUser(userId);
+            //  this.sendMessage("User with id of: " + userId + " in waiting list");
         } else {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
@@ -82,6 +84,12 @@ public class SlotService {
         }
     }
 
+    private void assignWorkSpaceToUser(Long userId) {
+        WorkSpace assignedWorkSpace = coordinateService.getNextAvailableWorkSpace();
+        assignedWorkSpace.setStatus(WorkSpaceStatus.OCCUPIED);
+        assignedWorkSpace.setUserId(userId);
+        log.debug("WorkSpace assigned to UserId: {}", userId);
+    }
 
     /**
      * Get the current status of a user by ID
@@ -138,7 +146,8 @@ public class SlotService {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
             entryResponse.setStatus(StatusList.SUCCESS);
-            //TODO assign a workspace to user, also send it as a response
+            //TODO send it as a response
+            assignWorkSpaceToUser(userId);
             log.debug("User entered into building! UserId: {}", userId);
         } else {
             entryResponse.setStatus(StatusList.FAIL);
@@ -162,10 +171,15 @@ public class SlotService {
         } else {
             peopleInside.remove(userId);
             log.debug("User exited the building! UserId: {}", userId);
-            //TODO re-color the workspace after user left the building
+            deAssignWorkSpace(userId);
             exitResponse.setStatus(StatusList.SUCCESS);
         }
         return exitResponse;
+    }
+
+    private void deAssignWorkSpace(long userId) {
+        WorkSpace workSpace = coordinateService.getWorkSpaceByUserId(userId);
+        workSpace.setStatus(WorkSpaceStatus.FREE);
     }
 
     /**

@@ -26,7 +26,7 @@ public class CoordinateService {
         this.fileName = fileNameByCurrentSafetyDistance;
     }
 
-    public List<WorkSpace> getAllowedWorkSpacesFromFile() {
+    public void getAllowedWorkSpacesFromFile() {
         ImageService imageService = new ImageService();
         Path filePath = Paths.get(fileName);
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
@@ -41,8 +41,6 @@ public class CoordinateService {
         } catch (NumberFormatException | IOException e) {
             e.printStackTrace();
         }
-
-        return allowedWorkSpaces;
     }
 
     public WorkSpace getNextAvailableWorkSpace() {

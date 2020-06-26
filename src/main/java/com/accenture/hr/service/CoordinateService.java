@@ -58,4 +58,13 @@ public class CoordinateService {
         }
         return null;
     }
+
+    public WorkSpace getWorkSpaceByUserId(Long userId) {
+        for (WorkSpace workSpace : allowedWorkSpaces) {
+            if (workSpace.getUserId() == userId) {
+                return workSpace;
+            }
+        }
+        return null;
+    }
 }

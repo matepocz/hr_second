@@ -31,7 +31,6 @@ public class SlotService {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-
     @Autowired
     public SlotService(Integer currentLimit, List<Long> peopleInside, List<Long> peopleWaiting,
                        List<Long> vipPersons) {

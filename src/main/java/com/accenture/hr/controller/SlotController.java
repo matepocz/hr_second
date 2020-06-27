@@ -63,6 +63,8 @@ public class SlotController {
     public ResponseEntity<ExitResponse> exit(@RequestParam Long userId) {
         ExitResponse exitResponse = slotService.exitRequest(userId);
         StatusList status = exitResponse.getStatus();
+        File file = new File(OFFICE_LAYOUT_IMAGES_PATH + "assigned_workspace_for_id_" + userId + ".jpg");
+        file.delete();
         return status.equals(StatusList.NOT_REGISTERED) ?
                 new ResponseEntity<>(exitResponse, HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(exitResponse, HttpStatus.OK);
@@ -75,7 +77,6 @@ public class SlotController {
             File file = new File(OFFICE_LAYOUT_IMAGES_PATH + fileName);
             Path fileLocation = Paths.get(String.valueOf(file));
             data = Files.readAllBytes(fileLocation);
-            file.delete();
         } catch (IOException e) {
             e.printStackTrace();
         }

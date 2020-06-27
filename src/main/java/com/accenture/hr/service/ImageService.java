@@ -65,4 +65,9 @@ public class ImageService {
         }
         return imgFile.getPath();
     }
+
+    public static void deleteImageFileByUserId(long userId) {
+        File file = new File(IMAGE_PREFIX + userId + ".jpg");
+        file.delete();
+    }
 }

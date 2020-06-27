@@ -26,6 +26,7 @@ public class SlotService {
 
     private static final Logger log = LoggerFactory.getLogger(SlotService.class);
     private static final String LINK_TO_GET_FILE = "/api/v1/slots/get-file/";
+    private static final String IMAGE_PREFIX = "assigned_workspace_for_id_";
 
     @Value("${server.port}")
     private int port;
@@ -76,10 +77,9 @@ public class SlotService {
         if (peopleInside.size() < currentLimit || vipPersons.contains(userId)) {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
-            registerResponse.setStatus(StatusList.SUCCESS);
-            URL url = generateUrlForLayoutImage(userId);
-            registerResponse.setUrl(url);
             assignWorkSpaceToUser(userId);
+            registerResponse.setStatus(StatusList.SUCCESS);
+            registerResponse.setUrl(generateUrlForLayoutImage(userId));
         } else {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
@@ -89,7 +89,7 @@ public class SlotService {
 
     private URL generateUrlForLayoutImage(Long userId) {
         String hostName = InetAddress.getLoopbackAddress().getHostAddress();
-        String usersImage = LINK_TO_GET_FILE + "assigned_workspace_for_id_" + userId + ".jpg";
+        String usersImage = LINK_TO_GET_FILE + IMAGE_PREFIX + userId + ".jpg";
         URL url = null;
         try {
             url = new URL("http", hostName, port, usersImage);
@@ -101,8 +101,8 @@ public class SlotService {
 
     private void assignWorkSpaceToUser(Long userId) {
         WorkSpace assignedWorkSpace = coordinateService.getNextAvailableWorkSpace();
-        assignedWorkSpace.setStatus(WorkSpaceStatus.OCCUPIED);
         assignedWorkSpace.setUserId(userId);
+        assignedWorkSpace.setStatus(WorkSpaceStatus.OCCUPIED);
         log.debug("WorkSpace assigned to UserId: {}", userId);
     }
 

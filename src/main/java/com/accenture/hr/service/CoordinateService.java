@@ -28,7 +28,7 @@ public class CoordinateService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
-        ImageService imageService = new ImageService();
+        ImageService imageService = new ImageService(currentSafetyDistance);
         for (int i = 0; i < X_COORDINATES.length; i++) {
             int xCoordinate = X_COORDINATES[i];
             int yCoordinate = Y_COORDINATES[i];

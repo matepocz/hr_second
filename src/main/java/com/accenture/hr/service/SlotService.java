@@ -10,24 +10,31 @@ import com.accenture.hr.responses.StatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 @Service
 @Transactional
 public class SlotService {
+    public static final String TOPIC = "stand_in_Waiting_List";
 
     private static final Logger log = LoggerFactory.getLogger(SlotService.class);
+    private static final String LINK_TO_GET_FILE = "/api/v1/slots/get-file/";
+
+    @Value("${server.port}")
+    private int port;
 
     private final int currentLimit;
     private final List<Long> peopleInside;
     private final WaitingList<Long> peopleWaiting;
     private final List<Long> vipPersons;
     private final CoordinateService coordinateService;
-
-    public static final String TOPIC = "stand_in_Waiting_List";
 
 //    @Autowired
 //    private KafkaTemplate<String, String> kafkaTemplate;
@@ -70,14 +77,26 @@ public class SlotService {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
             registerResponse.setStatus(StatusList.SUCCESS);
-            //TODO send as a response
+            URL url = generateUrlForLayoutImage(userId);
+            registerResponse.setUrl(url);
             assignWorkSpaceToUser(userId);
-            //  this.sendMessage("User with id of: " + userId + " in waiting list");
         } else {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
             registerResponse.setStatus(StatusList.TO_WAITING_LIST);
         }
+    }
+
+    private URL generateUrlForLayoutImage(Long userId) {
+        String hostName = InetAddress.getLoopbackAddress().getHostAddress();
+        String usersImage = LINK_TO_GET_FILE + "assigned_workspace_for_id_" + userId + ".jpg";
+        URL url = null;
+        try {
+            url = new URL("http", hostName, port, usersImage);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 
     private void assignWorkSpaceToUser(Long userId) {

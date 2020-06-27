@@ -26,8 +26,9 @@ public class ImageService {
 
     private static final String CURRENT_LAYOUT = "images/office_layout.jpg";
     private static final String TEMP_LAYOUT = "src/main/resources/images/temp_layout.jpg";
+    private static final String IMAGE_PREFIX = "src/main/resources/images/assigned_workspace_for_id_";
 
-    public void drawWorkSpace(int x, int y, Color color) {
+    public void drawWorkSpace(int x, int y, Color color, long userId) {
         int radiusOfCircle = currentSafetyDistance * 10;
         int circlesOffset = (int) Math.ceil(radiusOfCircle / (double) 2);
         String tempFilePath = getImgFile(CURRENT_LAYOUT);
@@ -41,7 +42,12 @@ public class ImageService {
         BufferedImage newImg = imagePlus.getBufferedImage();
 
         try {
-            File outputFile = new File(TEMP_LAYOUT);
+            File outputFile;
+            if (userId != 0) {
+                outputFile = new File(IMAGE_PREFIX + userId + ".jpg");
+            } else {
+                outputFile = new File(TEMP_LAYOUT);
+            }
             ImageIO.write(newImg, "jpg", outputFile);
         } catch (IOException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));

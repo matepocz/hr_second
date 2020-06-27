@@ -32,6 +32,7 @@ public class CoordinateService {
         for (int i = 0; i < X_COORDINATES.length; i++) {
             int xCoordinate = X_COORDINATES[i];
             int yCoordinate = Y_COORDINATES[i];
+            //TODO logic for 5, 4, 3, 2, 1 meters
             WorkSpace workSpace = new WorkSpace(xCoordinate, yCoordinate, imageService);
             allowedWorkSpaces.add(workSpace);
         }

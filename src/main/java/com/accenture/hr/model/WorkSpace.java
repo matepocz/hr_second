@@ -21,7 +21,7 @@ public class WorkSpace {
 
     public WorkSpaceStatus setStatus(WorkSpaceStatus status) {
         this.status = status;
-        imageService.drawWorkSpace(x, y, status.getColor());
+        imageService.drawWorkSpace(x, y, status.getColor(), userId);
         return status;
     }
 

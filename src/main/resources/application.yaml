@@ -26,6 +26,8 @@ spring:
 logging:
   level:
     com.accenture.hr: trace
+server:
+  port: 8080
 
 vipPersons: 995,996,997,998,999
 

@@ -8,11 +8,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,34 +15,26 @@ import java.util.List;
 @Transactional
 public class CoordinateService {
 
-    private final String fileName;
+    private static final int[] X_COORDINATES = Coordinates.X_COORDINATES;
+    private static final int[] Y_COORDINATES = Coordinates.Y_COORDINATES;
+
+    private final int currentSafetyDistance;
     private final List<WorkSpace> allowedWorkSpaces = new ArrayList<>();
 
     @Autowired
-    public CoordinateService(String fileNameByCurrentSafetyDistance) {
-        this.fileName = fileNameByCurrentSafetyDistance;
+    public CoordinateService(int currentSafetyDistance) {
+        this.currentSafetyDistance = currentSafetyDistance;
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void getAllowedWorkSpacesFromFile() {
+    public void getAllowedWorkSpaces() {
         ImageService imageService = new ImageService();
-        Path filePath = Paths.get(fileName);
-        try (BufferedReader reader = Files.newBufferedReader(filePath)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                generateWorkSpace(imageService, line);
-            }
-        } catch (NumberFormatException | IOException e) {
-            e.printStackTrace();
+        for (int i = 0; i < X_COORDINATES.length; i++) {
+            int xCoordinate = X_COORDINATES[i];
+            int yCoordinate = Y_COORDINATES[i];
+            WorkSpace workSpace = new WorkSpace(xCoordinate, yCoordinate, imageService);
+            allowedWorkSpaces.add(workSpace);
         }
-    }
-
-    private void generateWorkSpace(ImageService imageService, String line) {
-        String[] coords = line.split(",");
-        int x = Integer.parseInt(coords[0]);
-        int y = Integer.parseInt(coords[1]);
-        WorkSpace workSpace = new WorkSpace(x, y, imageService);
-        allowedWorkSpaces.add(workSpace);
     }
 
     public WorkSpace getNextAvailableWorkSpace() {

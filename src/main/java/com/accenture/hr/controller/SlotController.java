@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 @RequestMapping("/api/v1/slots")
 public class SlotController {
 
-    private static final String WORKSPACE_ASSIGNED_TO_USER = "src/asset/users_workspace.jpg";
+    private static final String OFFICE_LAYOUT_IMAGES_PATH = "src/main/resources/images/";
     private static final String CURRENT_LAYOUT = "src/main/resources/images/temp_layout.jpg";
 
     private final SlotService slotService;
@@ -72,7 +72,7 @@ public class SlotController {
     public ResponseEntity<byte[]> downloadFileFromLocal(@PathVariable String fileName) {
         byte[] data = null;
         try {
-            File file = new File(WORKSPACE_ASSIGNED_TO_USER);
+            File file = new File(OFFICE_LAYOUT_IMAGES_PATH + fileName);
             Path fileLocation = Paths.get(String.valueOf(file));
             data = Files.readAllBytes(fileLocation);
             file.delete();

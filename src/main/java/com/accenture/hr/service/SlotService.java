@@ -160,10 +160,10 @@ public class SlotService {
         if (positionInQueue < freeCapacity) {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
-            entryResponse.setStatus(StatusList.SUCCESS);
-            log.debug("User entered into building! UserId: {}", userId);
-            //TODO send it as a response
             assignWorkSpaceToUser(userId);
+            entryResponse.setStatus(StatusList.SUCCESS);
+            entryResponse.setUrl(generateUrlForLayoutImage(userId));
+            log.debug("User entered into building! UserId: {}", userId);
         } else {
             entryResponse.setStatus(StatusList.FAIL);
             log.debug("No free capacity, User stays in waiting list! UserId: {}", userId);
@@ -187,6 +187,7 @@ public class SlotService {
             peopleInside.remove(userId);
             exitResponse.setStatus(StatusList.SUCCESS);
             deAssignWorkSpace(userId);
+            ImageService.deleteImageFileByUserId(userId);
             log.debug("User exited the building! UserId: {}", userId);
         }
         return exitResponse;

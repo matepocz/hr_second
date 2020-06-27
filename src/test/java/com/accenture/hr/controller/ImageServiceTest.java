@@ -14,7 +14,7 @@ public class ImageServiceTest {
     @Test
     public void testImgEditing() {
 
-        imageService.drawWorkSpace(715, 100, Color.BLACK);
+        imageService.drawWorkSpace(715, 100, Color.BLACK, 0);
         // imageService.testImgEditing(715, 100, 20, 10, Color.RED);
         // imageService.testImgEditing(765, 100, 20, 10, Color.BLACK);
     }

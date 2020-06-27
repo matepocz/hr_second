@@ -51,6 +51,11 @@ public class HrApplication {
     }
 
     @Bean
+    public int currentSafetyDistance() {
+        return currentSafetyDistance;
+    }
+
+    @Bean
     public String fileNameByCurrentSafetyDistance() {
         String fileName = "src/main/resources/coordinates/";
         switch (currentSafetyDistance) {

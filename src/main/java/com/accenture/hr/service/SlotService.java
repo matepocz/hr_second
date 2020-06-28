@@ -212,4 +212,21 @@ public class SlotService {
 //    public void consume(String message) throws IOException {
 //        log.info(String.format("#### -> Consumed message -> %s", message));
 //    }
+
+
+    public List<Long> getPeopleInside() {
+        return peopleInside;
+    }
+
+    public WaitingList<Long> getPeopleWaiting() {
+        return peopleWaiting;
+    }
+
+    public List<Long> getVipPersons() {
+        return vipPersons;
+    }
+
+    public int getCurrentLimit() {
+        return currentLimit;
+    }
 }

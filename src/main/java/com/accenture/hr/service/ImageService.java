@@ -26,7 +26,7 @@ public class ImageService {
 
     private static final String CURRENT_LAYOUT = "images/office_layout.jpg";
     private static final String TEMP_LAYOUT = "src/main/resources/images/temp_layout.jpg";
-    private static final String IMAGE_PREFIX = "src/main/resources/images/assigned_workspace_for_id_";
+    private static final String IMAGE_PREFIX = "src/main/resources/images/";
 
     public void drawWorkSpace(int x, int y, Color color, long userId) {
 
@@ -72,7 +72,10 @@ public class ImageService {
     }
 
     public static void deleteImageFileByUserId(long userId) {
-        File file = new File(IMAGE_PREFIX + userId + ".jpg");
-        file.delete();
+        try {
+            File file = new File(IMAGE_PREFIX + userId + ".jpg");
+            file.delete();
+        } catch (SecurityException | NullPointerException ignored){
+        }
     }
 }

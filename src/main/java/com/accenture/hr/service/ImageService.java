@@ -29,18 +29,14 @@ public class ImageService {
     private static final String IMAGE_PREFIX = "src/main/resources/images/";
 
     public void drawWorkSpace(int x, int y, Color color, long userId) {
-
         String tempFilePath = getImgFilePath(CURRENT_LAYOUT);
         BufferedImage newImg = makeBufferedImage(x, y, color, tempFilePath);
-
         try {
-            File outputFile;
             if (userId != 0) {
-                outputFile = new File(IMAGE_PREFIX + userId + ".jpg");
-            } else {
-                outputFile = new File(TEMP_LAYOUT);
+                File outputFile = new File(IMAGE_PREFIX + userId + ".jpg");
+                ImageIO.write(newImg, "jpg", outputFile);
             }
-            ImageIO.write(newImg, "jpg", outputFile);
+            drawWorkSpaceOnTempLayout(x, y, color);
         } catch (IOException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
@@ -59,6 +55,12 @@ public class ImageService {
         return imagePlus.getBufferedImage();
     }
 
+    private void drawWorkSpaceOnTempLayout(int x, int y, Color color) throws IOException {
+        BufferedImage newImg = makeBufferedImage(x, y, color, TEMP_LAYOUT);
+        File tempLayout = new File(TEMP_LAYOUT);
+        ImageIO.write(newImg, "jpg", tempLayout);
+    }
+
     public String getImgFilePath(String pathInResources) {
         Resource resource = new ClassPathResource(pathInResources);
         File imgFile = null;
@@ -75,7 +77,8 @@ public class ImageService {
         try {
             File file = new File(IMAGE_PREFIX + userId + ".jpg");
             file.delete();
-        } catch (SecurityException | NullPointerException ignored){
+        } catch (SecurityException | NullPointerException e) {
+            log.debug(e.toString());
         }
     }
 }

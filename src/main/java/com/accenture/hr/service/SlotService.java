@@ -80,10 +80,12 @@ public class SlotService {
             assignWorkSpaceToUser(userId);
             registerResponse.setStatus(StatusList.SUCCESS);
             registerResponse.setUrl(generateUrlForLayoutImage(userId));
+            registerResponse.setPositionInQueue(0);
         } else {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
             registerResponse.setStatus(StatusList.TO_WAITING_LIST);
+            registerResponse.setPositionInQueue(peopleWaiting.size() + 1);
         }
     }
 

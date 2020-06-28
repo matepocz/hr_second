@@ -26,7 +26,6 @@ public class SlotService {
 
     private static final Logger log = LoggerFactory.getLogger(SlotService.class);
     private static final String LINK_TO_GET_FILE = "/api/v1/slots/get-file/";
-    private static final String IMAGE_PREFIX = "assigned_workspace_for_id_";
 
     @Value("${server.port}")
     private int port;
@@ -85,13 +84,13 @@ public class SlotService {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
             registerResponse.setStatus(StatusList.TO_WAITING_LIST);
-            registerResponse.setPositionInQueue(peopleWaiting.size() + 1);
+            registerResponse.setPositionInQueue(peopleWaiting.size());
         }
     }
 
     private URL generateUrlForLayoutImage(Long userId) {
         String hostName = InetAddress.getLoopbackAddress().getHostAddress();
-        String usersImage = LINK_TO_GET_FILE + IMAGE_PREFIX + userId + ".jpg";
+        String usersImage = LINK_TO_GET_FILE + userId + ".jpg";
         URL url = null;
         try {
             url = new URL("http", hostName, port, usersImage);

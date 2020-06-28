@@ -29,7 +29,6 @@ public class ImageService {
     private static final String IMAGE_PREFIX = "src/main/resources/images/assigned_workspace_for_id_";
 
     public void drawWorkSpace(int x, int y, Color color, long userId) {
-
         String tempFilePath = getImgFilePath(CURRENT_LAYOUT);
         BufferedImage newImg = makeBufferedImage(x, y, color, tempFilePath);
 
@@ -50,10 +49,12 @@ public class ImageService {
         ImagePlus imagePlus = IJ.openImage(tempFilePath);
         ImageProcessor ip = imagePlus.getProcessor();
         ip.setColor(color);
+
         int radiusOfCircle = currentSafetyDistance * 10;
         int circlesOffset = (int) Math.ceil(radiusOfCircle / (double) 2);
         ip.drawOval(x - 3, y - 3, 6, 6);
         ip.drawOval(x - circlesOffset, y - circlesOffset, radiusOfCircle, radiusOfCircle);
+
         log.debug(String.format("Workspace colored to %s", color));
 
         return imagePlus.getBufferedImage();

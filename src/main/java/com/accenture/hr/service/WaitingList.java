@@ -1,5 +1,6 @@
 package com.accenture.hr.service;
 
+import com.accenture.hr.config.KafkaTemplateConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,15 @@ public class WaitingList<E> extends ArrayList<E> {
 
     private static final Logger log = LoggerFactory.getLogger(WaitingList.class);
 
-    @Autowired
+    //    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+
+   /* @Autowired
+    private KafkaTemplateConfig kafkaTemplateConfig;
+*/
+    public WaitingList(KafkaTemplateConfig kafkaTemplateConfig) {
+        this.kafkaTemplate = kafkaTemplateConfig.getTemplate();
+    }
 
     @Override
     public boolean add(E e) {

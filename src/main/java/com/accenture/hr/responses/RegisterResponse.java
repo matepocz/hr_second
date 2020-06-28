@@ -6,15 +6,16 @@ import java.net.URL;
 
 public class RegisterResponse {
 
-    private StatusList registrationStatus;
+    private StatusList status;
     private URL url;
+    private int positionInQueue;
 
     public StatusList getStatus() {
-        return registrationStatus;
+        return status;
     }
 
-    public void setStatus(StatusList registrationStatus) {
-        this.registrationStatus = registrationStatus;
+    public void setStatus(StatusList status) {
+        this.status = status;
     }
 
     public URL getUrl() {
@@ -23,5 +24,13 @@ public class RegisterResponse {
 
     public void setUrl(URL url) {
         this.url = url;
+    }
+
+    public int getPositionInQueue() {
+        return positionInQueue;
+    }
+
+    public void setPositionInQueue(int positionInQueue) {
+        this.positionInQueue = positionInQueue;
     }
 }

@@ -134,10 +134,10 @@ public class SlotServiceTest {
 
     @Test
     public void testEntry() {
-        slotService.getPeopleInside().addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L));
+        slotService.getPeopleInside().add(1L);
         slotService.getPeopleWaiting().addAll(Arrays.asList(9L, 10L, 11L));
-        slotService.entryRequest(9L);
-        Assertions.assertEquals(StatusList.SUCCESS, slotService.entryRequest(10L).getStatus());
+        Assertions.assertEquals(StatusList.SUCCESS, slotService.entryRequest(9L).getStatus());
+        Assertions.assertEquals(StatusList.FAIL, slotService.entryRequest(10L).getStatus());
         Assertions.assertEquals(slotService.getPeopleInside().size(), slotService.getCurrentLimit());
     }
 

@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Service
-//@Transactional
+@Service
+@Transactional
 public class CoordinateService {
 
     private static final int[] X_COORDINATES = Coordinates.X_COORDINATES;

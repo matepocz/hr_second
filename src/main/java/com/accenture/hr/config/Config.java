@@ -26,10 +26,10 @@ public class Config {
         return new ArrayList<>();
     }
 
-  /*  @Bean
+    @Bean
     public WaitingList<Long> peopleWaiting() {
         return new WaitingList<>();
-    }*/
+    }
 
     @Bean
     public Integer currentLimit() {
@@ -50,5 +50,4 @@ public class Config {
     public int currentSafetyDistance() {
         return currentSafetyDistance;
     }
-
 }

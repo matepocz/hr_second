@@ -1,6 +1,5 @@
 package com.accenture.hr.controller;
 
-import com.accenture.hr.config.KafkaTemplateConfig;
 import com.accenture.hr.enums.StatusList;
 import com.accenture.hr.service.CoordinateService;
 import com.accenture.hr.service.SlotService;
@@ -10,29 +9,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SlotServiceTest {
 
-    @Autowired
     private SlotService slotService;
-
-    @Autowired
-    private KafkaTemplateConfig config;
-
+    private CoordinateService coordinateService;
     private final Integer currentLimit = 10;
     private final List<Long> peopleInside = new ArrayList<>();
-    private final WaitingList<Long> peopleWaiting = new WaitingList<>(config);
+    private final WaitingList<Long> peopleWaiting = new WaitingList<>();
     private final List<Long> WipPersons = new ArrayList<>();
 
-
     @BeforeEach
-    public void init() {
-        slotService = new  SlotService(currentLimit, peopleInside, WipPersons, config);
+    private void init() {
+        slotService = new SlotService(currentLimit, peopleInside, peopleWaiting, WipPersons, coordinateService);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.accenture.hr.service;
 
-import com.accenture.hr.config.KafkaTemplateConfig;
 import com.accenture.hr.enums.StatusList;
 import com.accenture.hr.enums.WorkSpaceStatus;
 import com.accenture.hr.model.WorkSpace;
@@ -38,17 +37,17 @@ public class SlotService {
     private final List<Long> vipPersons;
     private final CoordinateService coordinateService;
 
-   /* @Autowired
-    private KafkaTemplateConfig config;*/
+//    @Autowired
+//    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public SlotService(int currentLimit, List<Long> peopleInside,
-                       List<Long> vipPersons, KafkaTemplateConfig config) {
+    public SlotService(int currentLimit, List<Long> peopleInside, WaitingList<Long> peopleWaiting,
+                       List<Long> vipPersons, CoordinateService coordinateService) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
-        this.peopleWaiting = new WaitingList<>(config);
+        this.peopleWaiting = peopleWaiting;
         this.vipPersons = vipPersons;
-        this.coordinateService = new CoordinateService(1);
+        this.coordinateService = coordinateService;
     }
 
     /**
@@ -209,4 +208,8 @@ public class SlotService {
         return !peopleWaiting.contains(userId) && !peopleInside.contains(userId) && !vipPersons.contains(userId);
     }
 
+//    @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
+//    public void consume(String message) throws IOException {
+//        log.info(String.format("#### -> Consumed message -> %s", message));
+//    }
 }

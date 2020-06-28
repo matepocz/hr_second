@@ -1,37 +1,27 @@
 package com.accenture.hr.controller;
 
 import com.accenture.hr.enums.StatusList;
-import com.accenture.hr.service.CoordinateService;
 import com.accenture.hr.service.SlotService;
-import com.accenture.hr.service.WaitingList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
 
-//@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class SlotServiceTest {
 
     @Autowired
     private SlotService slotService;
-//    private CoordinateService coordinateService;
-//    private final Integer currentLimit = 10;
-//    private final List<Long> peopleInside = new ArrayList<>();
-//    private final WaitingList<Long> peopleWaiting = new WaitingList<>();
     private final List<Long> WipPersons = new ArrayList<>();
 
- /*   @BeforeEach
+    @BeforeEach
     private void init() {
-        slotService = new SlotService(currentLimit, peopleInside, peopleWaiting, WipPersons, coordinateService);
-    }*/
-
-
+        slotService.getPeopleWaiting().clear();
+        slotService.getPeopleInside().clear();
+    }
 
     @Test
     public void testRegister_hasSpace_registers() {

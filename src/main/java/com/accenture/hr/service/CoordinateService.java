@@ -4,10 +4,12 @@ import com.accenture.hr.enums.WorkSpaceStatus;
 import com.accenture.hr.model.WorkSpace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,23 @@ public class CoordinateService {
             //TODO logic for 5, 4, 3, 2, 1 meters
             WorkSpace workSpace = new WorkSpace(xCoordinate, yCoordinate, imageService);
             allowedWorkSpaces.add(workSpace);
+        }
+    }
+
+    @EventListener(ApplicationStartingEvent.class)
+    public void  runKafkaServer(){
+        boolean isWindows = System.getProperty("os.name")
+                .toLowerCase().startsWith("windows");
+        try {
+                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/zookeeper-server-start.sh", "kafka/kafka_2.12-2.5.0/config/zookeeper.properties"});
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        try {
+                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/kafka-server-start.sh", "kafka/kafka_2.12-2.5.0/config/server.properties"});
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 

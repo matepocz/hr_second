@@ -30,6 +30,17 @@ public class CoordinateService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
+        try {
+            Runtime.getRuntime().exec("startZookeeper.sh");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Runtime.getRuntime().exec("startKafkaServer.sh");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ImageService imageService = new ImageService(currentSafetyDistance);
         for (int i = 0; i < X_COORDINATES.length; i++) {
             int xCoordinate = X_COORDINATES[i];
@@ -40,22 +51,22 @@ public class CoordinateService {
         }
     }
 
-    @EventListener(ApplicationStartingEvent.class)
-    public void  runKafkaServer(){
-        boolean isWindows = System.getProperty("os.name")
-                .toLowerCase().startsWith("windows");
-        try {
-                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/zookeeper-server-start.sh", "kafka/kafka_2.12-2.5.0/config/zookeeper.properties"});
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-        try {
-                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/kafka-server-start.sh", "kafka/kafka_2.12-2.5.0/config/server.properties"});
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
+//    @EventListener(ApplicationStartingEvent.class)
+//    public void  runKafkaServer(){
+//        boolean isWindows = System.getProperty("os.name")
+//                .toLowerCase().startsWith("windows");
+//        try {
+//                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/zookeeper-server-start.sh", "kafka/kafka_2.12-2.5.0/config/zookeeper.properties"});
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/kafka-server-start.sh", "kafka/kafka_2.12-2.5.0/config/server.properties"});
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }
+//    }
 
     public WorkSpace getNextAvailableWorkSpace() {
         for (WorkSpace allowedWorkSpace : allowedWorkSpaces) {

@@ -68,7 +68,7 @@ public class CoordinateService {
                 lastIndexOfCoordinates = 95;
                 break;
             case 1:
-                lastIndexOfCoordinates = 113;
+                lastIndexOfCoordinates = 191;
                 break;
             default:
                 lastIndexOfCoordinates = 46;

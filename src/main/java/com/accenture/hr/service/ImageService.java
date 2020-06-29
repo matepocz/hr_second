@@ -20,15 +20,11 @@ public class ImageService {
 
     private final int currentSafetyDistance;
 
-    private static final Object lock = new Object();
-    private static final Object lock2 = new Object();
-
     public ImageService(int currentSafetyDistance) {
         this.currentSafetyDistance = currentSafetyDistance;
     }
 
     private static final String CURRENT_LAYOUT = "images/office_layout.jpg";
-    private static final String TEMP_LAYOUT = "src/main/resources/images/temp_layout.jpg";
     private static final String IMAGE_PREFIX = "src/main/resources/images/";
 
     public void drawWorkSpace(int x, int y, Color color, long userId) {
@@ -46,28 +42,22 @@ public class ImageService {
     }
 
     private BufferedImage makeBufferedImage(int x, int y, Color color, String tempFilePath) {
-        ImagePlus imagePlus = null;
-
-            imagePlus = IJ.openImage(tempFilePath);
-            ImageProcessor ip = imagePlus.getProcessor();
-            ip.setColor(color);
-            int radiusOfCircle = currentSafetyDistance * 10;
-            int circlesOffset = (int) Math.ceil(radiusOfCircle / (double) 2);
-        synchronized (lock) {
-            ip.drawOval(x - 3, y - 3, 6, 6);
-            ip.drawOval(x - circlesOffset, y - circlesOffset, radiusOfCircle, radiusOfCircle);
-            log.debug(String.format("x: %s, y: %s colored to %s", x, y, color));
-        }
+        ImagePlus imagePlus = IJ.openImage(tempFilePath);
+        ImageProcessor ip = imagePlus.getProcessor();
+        ip.setColor(color);
+        int radiusOfCircle = currentSafetyDistance * 10;
+        int circlesOffset = (int) Math.ceil(radiusOfCircle / (double) 2);
+        ip.drawOval(x - 3, y - 3, 6, 6);
+        ip.drawOval(x - circlesOffset, y - circlesOffset, radiusOfCircle, radiusOfCircle);
+        log.debug(String.format("x: %s, y: %s colored to %s", x, y, color));
         return imagePlus.getBufferedImage();
     }
 
     private void drawWorkSpaceOnTempLayout(int x, int y, Color color) throws IOException {
-        synchronized (lock2) {
-            BufferedImage newImg = makeBufferedImage(x, y, color, TEMP_LAYOUT);
-            File tempLayout = new File(TEMP_LAYOUT);
-            ImageIO.write(newImg, "jpg", tempLayout);
-        }
-
+        String tempLayoutPath = "src/main/resources/images/temp_layout_" + currentSafetyDistance + "_meter.jpg";
+        BufferedImage newImg = makeBufferedImage(x, y, color, tempLayoutPath);
+        File tempLayout = new File(tempLayoutPath);
+        ImageIO.write(newImg, "jpg", tempLayout);
     }
 
     public String getImgFilePath(String pathInResources) {

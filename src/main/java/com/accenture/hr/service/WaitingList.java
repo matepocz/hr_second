@@ -1,6 +1,5 @@
 package com.accenture.hr.service;
 
-import com.accenture.hr.config.Config;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +15,15 @@ public class WaitingList<E> extends ArrayList<E> {
 
     private static final Logger log = LoggerFactory.getLogger(WaitingList.class);
 
-    @Autowired
     private SlotService slotService;
 
-    @Autowired
-    private Config config;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+
+    public WaitingList(SlotService slotService) {
+        this.slotService = slotService;
+    }
 
     @Override
     public boolean add(E e) {
@@ -50,7 +50,7 @@ public class WaitingList<E> extends ArrayList<E> {
             if (i <= currentLimit || (i - currentLimit) % placeInWaitingListToCall == 0) {
                 String messageToConsumer = "User with id of: " + e + " getPossibility to Enter Into Building";
                 message = new ProducerRecord<>(TOPIC, messageToConsumer);
-                kafkaTemplate.send(message);
+  //              kafkaTemplate.send(message);
             }
         }
     }

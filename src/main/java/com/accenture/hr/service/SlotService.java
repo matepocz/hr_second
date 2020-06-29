@@ -41,11 +41,11 @@ public class SlotService {
 //    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public SlotService(int currentLimit, List<Long> peopleInside, WaitingList<Long> peopleWaiting,
+    public SlotService(int currentLimit, List<Long> peopleInside,
                        List<Long> vipPersons, CoordinateService coordinateService, int getPlaceInWaitingListToCall) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
-        this.peopleWaiting = peopleWaiting;
+        this.peopleWaiting = new WaitingList<>(this);
         this.vipPersons = vipPersons;
         this.coordinateService = coordinateService;
         this.placeInWaitingListToCall = getPlaceInWaitingListToCall;

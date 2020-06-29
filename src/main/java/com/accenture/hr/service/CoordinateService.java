@@ -10,7 +10,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +19,8 @@ public class CoordinateService {
 
     private static final Logger log = LoggerFactory.getLogger(CoordinateService.class);
 
-    private static final int[] X_COORDINATES = Coordinates.X_COORDINATES;
-    private static final int[] Y_COORDINATES = Coordinates.Y_COORDINATES;
+    private static final int[] X_COORDINATES = Coordinates.X_COORDINATES_ORDERED;
+    private static final int[] Y_COORDINATES = Coordinates.Y_COORDINATES_ORDERED;
 
     private final int currentSafetyDistance;
     private final List<WorkSpace> allowedWorkSpaces = new ArrayList<>();
@@ -31,6 +30,10 @@ public class CoordinateService {
         this.currentSafetyDistance = currentSafetyDistance;
     }
 
+    /**
+     * Loads the workspaces to allowedWorkSpaces list
+     * based on currentSafetyDistance
+     */
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
         ImageService imageService = new ImageService(currentSafetyDistance);
@@ -54,6 +57,7 @@ public class CoordinateService {
                 return allowedWorkSpace;
             }
         }
+        log.debug("No available workspace found!");
         return null;
     }
 
@@ -69,6 +73,7 @@ public class CoordinateService {
                 return workSpace;
             }
         }
+        log.debug("No assigned workspace found to this user! UserId: {}", userId);
         return null;
     }
 }

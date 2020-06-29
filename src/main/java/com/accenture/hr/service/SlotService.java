@@ -35,18 +35,20 @@ public class SlotService {
     private final WaitingList<Long> peopleWaiting;
     private final List<Long> vipPersons;
     private final CoordinateService coordinateService;
+    private final int placeInWaitingListToCall;
 
 //    @Autowired
 //    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
     public SlotService(int currentLimit, List<Long> peopleInside, WaitingList<Long> peopleWaiting,
-                       List<Long> vipPersons, CoordinateService coordinateService) {
+                       List<Long> vipPersons, CoordinateService coordinateService, int getPlaceInWaitingListToCall) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
         this.peopleWaiting = peopleWaiting;
         this.vipPersons = vipPersons;
         this.coordinateService = coordinateService;
+        this.placeInWaitingListToCall = getPlaceInWaitingListToCall;
     }
 
     /**
@@ -237,5 +239,9 @@ public class SlotService {
 
     public int getCurrentLimit() {
         return currentLimit;
+    }
+
+    public int getPlaceInWaitingListToCall() {
+        return placeInWaitingListToCall;
     }
 }

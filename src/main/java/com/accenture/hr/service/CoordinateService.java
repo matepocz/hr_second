@@ -11,6 +11,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PreDestroy;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,18 +43,16 @@ public class CoordinateService {
     public void getAllowedWorkSpaces() {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("./startZookeeper.sh");
-            processBuilder.inheritIO();
-            Process process = processBuilder.start();
+            processBuilder.inheritIO().start();
 
-        } catch (IOException  e) {
+        } catch (IOException e) {
             log.warn(e.getStackTrace().toString());
         }
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("./startKafkaServer.sh");
-            processBuilder.inheritIO();
-            Process process = processBuilder.start();
+            processBuilder.inheritIO().start();
 
-        }catch (IOException  e) {
+        } catch (IOException e) {
             log.warn(e.getStackTrace().toString());
         }
 
@@ -84,6 +84,12 @@ public class CoordinateService {
         }
         return null;
     }
+
+    @PreDestroy
+    public void shutDownAllProcess() {
+
+    }
+
 
     public WorkSpace getWorkSpaceByUserId(long userId) {
         for (WorkSpace workSpace : allowedWorkSpaces) {

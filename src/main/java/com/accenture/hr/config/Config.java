@@ -20,6 +20,8 @@ public class Config {
     private int currentSafetyDistance;
     @Value("${vipPersons}")
     private String vipPersons;
+    @Value(("${placeInWaitingListToCall}"))
+    private int placeInWaitingListToCall;
 
     @Bean
     public List<Long> peopleInside() {
@@ -49,5 +51,10 @@ public class Config {
     @Bean
     public int currentSafetyDistance() {
         return currentSafetyDistance;
+    }
+
+    @Bean
+    public int getPlaceInWaitingListToCall() {
+        return placeInWaitingListToCall;
     }
 }

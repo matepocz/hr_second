@@ -16,26 +16,41 @@ public class WaitingList<E> extends ArrayList<E> {
     private static final Logger log = LoggerFactory.getLogger(WaitingList.class);
 
     @Autowired
+    private SlotService slotService;
+
+    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+
+    private int currentLimit;
+    private int placeInWaitingListToCall;
+
+    public WaitingList() {
+        this.currentLimit = slotService.getCurrentLimit();
+        this.placeInWaitingListToCall = slotService.getPlaceInWaitingListToCall();
+    }
 
     @Override
     public boolean add(E e) {
         boolean result = super.add(e);
-        callBack();
+        callBack(e);
         return result;
     }
 
-    @Override
+   /* @Override
     public boolean remove(Object index) {
         boolean removed = super.remove(index);
-        callBack();
         return removed;
-    }
+    }*/
 
-    public void callBack() {
-        System.out.println("==> List in callback");
-        ProducerRecord<String, String> message = new ProducerRecord<>(TOPIC, " => List get call");
-        kafkaTemplate.send(message);
+    public void callBack(E e) {
+        ProducerRecord<String, String> message = null;
+        for (int i = 0; i < this.size(); i++) {
+            if (i <= this.currentLimit || (i - this.currentLimit) % this.placeInWaitingListToCall == 0) {
+                String messageToConsumer = "User with id : " + e + " getPossibilityTo Enter IntoBuilding";
+                message = new ProducerRecord<>(TOPIC, messageToConsumer);
+                kafkaTemplate.send(message);
+            }
+        }
     }
 
     @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")

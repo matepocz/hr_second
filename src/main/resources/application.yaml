@@ -35,5 +35,6 @@ currentSafetyDistance: 1
 
 maxCapacity: 250
 currentAllowancePercent: 1
+placeInWaitingListToCall : 3
 
 cors-policies: http://localhost:3000, http://127.0.0.1:3000

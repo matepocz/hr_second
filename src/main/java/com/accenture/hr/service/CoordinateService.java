@@ -36,7 +36,7 @@ public class CoordinateService {
             e.printStackTrace();
         }
         try {
-            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startZookeeper.sh");
+            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startKafkaServer.sh");
         } catch (IOException e) {
             e.printStackTrace();
         }

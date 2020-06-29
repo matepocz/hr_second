@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,13 +40,12 @@ public class SlotService {
     private final int placeInWaitingListToCall;
 
 
-
     @Autowired
     public SlotService(int currentLimit, List<Long> peopleInside,
-                       List<Long> vipPersons, CoordinateService coordinateService, int getPlaceInWaitingListToCall, KafkaTemplate<String, String>template) {
+                       List<Long> vipPersons, CoordinateService coordinateService, int getPlaceInWaitingListToCall, KafkaTemplate<String, Long> template) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
-        this.peopleWaiting = new WaitingList<>(this,template);
+        this.peopleWaiting = new WaitingList<>(this, template);
         this.vipPersons = vipPersons;
         this.coordinateService = coordinateService;
         this.placeInWaitingListToCall = getPlaceInWaitingListToCall;
@@ -223,10 +223,11 @@ public class SlotService {
         return !peopleWaiting.contains(userId) && !peopleInside.contains(userId) && !vipPersons.contains(userId);
     }
 
-//    @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
-//    public void consume(String message) throws IOException {
-//        log.info(String.format("#### -> Consumed message -> %s", message));
-//    }
+    @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
+    public void consume(long id) {
+        String messageToConsumer = "User with id of: " + id + " getPossibility to Enter Into Building";
+        log.info(messageToConsumer);
+    }
 
 
     public List<Long> getPeopleInside() {

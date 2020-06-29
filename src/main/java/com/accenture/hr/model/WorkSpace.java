@@ -3,7 +3,7 @@ package com.accenture.hr.model;
 import com.accenture.hr.enums.WorkSpaceStatus;
 import com.accenture.hr.service.ImageService;
 
-public class WorkSpace {
+public class WorkSpace implements Runnable {
 
     private final ImageService imageService;
 
@@ -16,7 +16,7 @@ public class WorkSpace {
         this.x = x;
         this.y = y;
         this.imageService = imageService;
-        this.status = setStatus(WorkSpaceStatus.FREE);
+        // this.status = setStatus(WorkSpaceStatus.FREE);
     }
 
     public WorkSpaceStatus setStatus(WorkSpaceStatus status) {
@@ -35,5 +35,10 @@ public class WorkSpace {
 
     public long getUserId() {
         return userId;
+    }
+
+    @Override
+    public void run() {
+        setStatus(WorkSpaceStatus.FREE);
     }
 }

@@ -20,6 +20,8 @@ public class ImageService {
 
     private final int currentSafetyDistance;
 
+    private static final Object lock = new Object();
+
     public ImageService(int currentSafetyDistance) {
         this.currentSafetyDistance = currentSafetyDistance;
     }
@@ -42,7 +44,7 @@ public class ImageService {
         }
     }
 
-    private BufferedImage makeBufferedImage(int x, int y, Color color, String tempFilePath) {
+    private  BufferedImage makeBufferedImage(int x, int y, Color color, String tempFilePath) {
         ImagePlus imagePlus = IJ.openImage(tempFilePath);
         ImageProcessor ip = imagePlus.getProcessor();
         ip.setColor(color);
@@ -56,9 +58,12 @@ public class ImageService {
     }
 
     private void drawWorkSpaceOnTempLayout(int x, int y, Color color) throws IOException {
-        BufferedImage newImg = makeBufferedImage(x, y, color, TEMP_LAYOUT);
-        File tempLayout = new File(TEMP_LAYOUT);
-        ImageIO.write(newImg, "jpg", tempLayout);
+        synchronized (lock){
+            BufferedImage newImg = makeBufferedImage(x, y, color, TEMP_LAYOUT);
+            File tempLayout = new File(TEMP_LAYOUT);
+            ImageIO.write(newImg, "jpg", tempLayout);
+        }
+
     }
 
     public String getImgFilePath(String pathInResources) {

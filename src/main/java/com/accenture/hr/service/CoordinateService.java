@@ -2,6 +2,8 @@ package com.accenture.hr.service;
 
 import com.accenture.hr.enums.WorkSpaceStatus;
 import com.accenture.hr.model.WorkSpace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
@@ -9,6 +11,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +21,8 @@ import java.util.List;
 @Service
 @Transactional
 public class CoordinateService {
+
+    private static final Logger log = LoggerFactory.getLogger(CoordinateService.class);
 
     private static final int[] X_COORDINATES = Coordinates.X_COORDINATES;
     private static final int[] Y_COORDINATES = Coordinates.Y_COORDINATES;
@@ -31,14 +38,20 @@ public class CoordinateService {
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
         try {
-            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startZookeeper.sh");
-        } catch (IOException e) {
-            e.printStackTrace();
+            ProcessBuilder processBuilder = new ProcessBuilder("./startZookeeper.sh");
+            processBuilder.inheritIO();
+            Process process = processBuilder.start();
+
+        } catch (IOException  e) {
+            log.warn(e.getStackTrace().toString());
         }
         try {
-            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startKafkaServer.sh");
-        } catch (IOException e) {
-            e.printStackTrace();
+            ProcessBuilder processBuilder = new ProcessBuilder("./startKafkaServer.sh");
+            processBuilder.inheritIO();
+            Process process = processBuilder.start();
+
+        }catch (IOException  e) {
+            log.warn(e.getStackTrace().toString());
         }
 
         ImageService imageService = new ImageService(currentSafetyDistance);
@@ -51,22 +64,6 @@ public class CoordinateService {
         }
     }
 
-//    @EventListener(ApplicationStartingEvent.class)
-//    public void  runKafkaServer(){
-//        boolean isWindows = System.getProperty("os.name")
-//                .toLowerCase().startsWith("windows");
-//        try {
-//                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/zookeeper-server-start.sh", "kafka/kafka_2.12-2.5.0/config/zookeeper.properties"});
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/kafka-server-start.sh", "kafka/kafka_2.12-2.5.0/config/server.properties"});
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//    }
 
     public WorkSpace getNextAvailableWorkSpace() {
         for (WorkSpace allowedWorkSpace : allowedWorkSpaces) {

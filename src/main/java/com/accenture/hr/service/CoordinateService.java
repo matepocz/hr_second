@@ -52,7 +52,7 @@ public class CoordinateService {
         }
         executor.shutdown();
         try {
-            executor.awaitTermination(25, TimeUnit.SECONDS);
+            executor.awaitTermination(40, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -68,7 +68,7 @@ public class CoordinateService {
                 lastIndexOfCoordinates = 95;
                 break;
             case 1:
-                lastIndexOfCoordinates = 113;
+                lastIndexOfCoordinates = 191;
                 break;
             default:
                 lastIndexOfCoordinates = 46;

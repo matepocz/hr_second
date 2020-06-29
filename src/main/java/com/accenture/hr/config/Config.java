@@ -63,17 +63,6 @@ public class Config {
         return currentSafetyDistance;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void copyOfficeLayoutToTempLayout() {
-        Path copied = Paths.get("src/main/resources/images/temp_layout.jpg");
-        Path originalPath = Paths.get("src/main/resources/images/office_layout.jpg");
-        try {
-            Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Bean
     public int getPlaceInWaitingListToCall() {
         return placeInWaitingListToCall;

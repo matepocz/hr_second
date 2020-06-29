@@ -164,11 +164,7 @@ public class SlotService {
         if (canEnter || vipPersons.contains(userId)) {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
-            WorkSpace workSpace = coordinateService.getWorkSpaceByUserId(userId);
-            if (workSpace == null) {
-                assignWorkSpaceToUser(userId);
-                workSpace = coordinateService.getWorkSpaceByUserId(userId);
-            }
+            WorkSpace workSpace = getWorkSpace(userId);
             workSpace.setStatus(WorkSpaceStatus.OCCUPIED);
             entryResponse.setStatus(StatusList.SUCCESS);
             entryResponse.setUrl(generateUrlForLayoutImage(userId));
@@ -178,6 +174,15 @@ public class SlotService {
             log.debug("No free capacity, User stays in waiting list! UserId: {}", userId);
         }
         return entryResponse;
+    }
+
+    private WorkSpace getWorkSpace(long userId) {
+        WorkSpace workSpace = coordinateService.getWorkSpaceByUserId(userId);
+        if (workSpace == null) {
+            assignWorkSpaceToUser(userId);
+            workSpace = coordinateService.getWorkSpaceByUserId(userId);
+        }
+        return workSpace;
     }
 
     /**

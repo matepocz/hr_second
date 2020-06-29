@@ -15,7 +15,6 @@ public class SlotServiceTest {
 
     @Autowired
     private SlotService slotService;
-    private final List<Long> WipPersons = new ArrayList<>();
 
     @BeforeEach
     private void init() {
@@ -27,7 +26,7 @@ public class SlotServiceTest {
     public void testRegister_hasSpace_registers() {
         long userId = 1L;
         slotService.registerRequest(userId);
-        Assertions.assertEquals(1, slotService.getPeopleInside().size());
+        Assertions.assertEquals(1, slotService.getPeopleWaiting().size());
     }
 
     @Test
@@ -35,13 +34,14 @@ public class SlotServiceTest {
         long userId = 1L;
         slotService.registerRequest(userId);
         slotService.registerRequest(userId);
-        Assertions.assertEquals(1, slotService.getPeopleInside().size());
+        Assertions.assertEquals(1, slotService.getPeopleWaiting().size());
     }
 
     @Test
     public void testRegister_hasSpace_alreadyInside() {
         long userId = 1L;
         slotService.registerRequest(userId);
+        slotService.entryRequest(userId);
         StatusList actualStatus = slotService.registerRequest(userId).getStatus();
         Assertions.assertEquals(StatusList.ALREADY_IN_BUILDING, actualStatus);
     }
@@ -49,7 +49,8 @@ public class SlotServiceTest {
     @Test
     public void testRegister_noSpace_putsOnWaitingList() {
         for (int i = 0; i < slotService.getCurrentLimit() + 1; i++) {
-            slotService.registerRequest((long) i);
+            slotService.registerRequest(i);
+            slotService.entryRequest(i);
         }
 
         Assertions.assertEquals(slotService.getCurrentLimit(), slotService.getPeopleInside().size());
@@ -59,7 +60,8 @@ public class SlotServiceTest {
     @Test
     public void testRegister_putsOnWaitingList() {
         for (int i = 0; i < slotService.getCurrentLimit() + 1; i++) {
-            slotService.registerRequest((long) i);
+            slotService.registerRequest(i);
+            slotService.entryRequest(i);
         }
         long userId = 22L;
         Assertions.assertEquals(slotService.getCurrentLimit(), slotService.getPeopleInside().size());
@@ -71,7 +73,8 @@ public class SlotServiceTest {
     @Test
     public void testRegister_noSpace_alreadyOnWaitingList_logsError() {
         for (int i = 0; i < slotService.getCurrentLimit(); i++) {
-            slotService.registerRequest((long) i);
+            slotService.registerRequest(i);
+            slotService.entryRequest(i);
         }
         slotService.registerRequest(20L);
         slotService.registerRequest(20L);
@@ -83,7 +86,8 @@ public class SlotServiceTest {
     @Test
     public void testRegister_alreadyOnWaitingList() {
         for (int i = 0; i < slotService.getCurrentLimit(); i++) {
-            slotService.registerRequest((long) i);
+            slotService.registerRequest(i);
+            slotService.entryRequest(i);
         }
         long userId = 20L;
         slotService.registerRequest(userId);
@@ -97,7 +101,7 @@ public class SlotServiceTest {
     @Test
     public void testStatus_isPeople_waiting() {
         for (int i = 1; i <= slotService.getCurrentLimit(); i++) {
-            slotService.registerRequest((long) i);
+            slotService.registerRequest(i);
         }
         long userId = 21L;
         slotService.registerRequest(userId);
@@ -109,6 +113,7 @@ public class SlotServiceTest {
     public void testStatus_isPeople_alreadyInBuilding() {
         long userId = 1L;
         slotService.registerRequest(userId);
+        slotService.entryRequest(userId);
         Assertions.assertEquals(StatusList.ALREADY_IN_BUILDING, slotService.statusRequest(userId).getStatus());
     }
 

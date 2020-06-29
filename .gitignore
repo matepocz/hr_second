@@ -31,3 +31,4 @@ build/
 .vscode/
 /src/main/resources/images/current_layout.jpg
 /kafka/
+/src/main/resources/images/temp_layout.jpg

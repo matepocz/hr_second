@@ -73,18 +73,20 @@ public class SlotService {
     }
 
     private void putUserToCorrespondingList(long userId, RegisterResponse registerResponse) {
-        if (peopleInside.size() < currentLimit || vipPersons.contains(userId)) {
-            peopleInside.add(userId);
-            log.debug("User checked into building! UserId: {}", userId);
+        if ((peopleInside.size() + peopleWaiting.size()) < currentLimit || vipPersons.contains(userId)) {
+            //peopleInside.add(userId);
+            peopleWaiting.add(userId);
+            log.debug("User registered to the office! UserId: {}", userId);
             assignWorkSpaceToUser(userId);
-            registerResponse.setStatus(StatusList.SUCCESS);
+            registerResponse.setStatus(StatusList.REGISTERED);
             registerResponse.setUrl(generateUrlForLayoutImage(userId));
             registerResponse.setPositionInQueue(0);
         } else {
             peopleWaiting.add(userId);
             log.debug("User placed on waitinglist! UserId: {}", userId);
             registerResponse.setStatus(StatusList.TO_WAITING_LIST);
-            registerResponse.setPositionInQueue(peopleWaiting.size());
+            int positionInQueue = (peopleInside.size() + peopleWaiting.size()) - currentLimit;
+            registerResponse.setPositionInQueue(positionInQueue);
         }
     }
 
@@ -103,7 +105,7 @@ public class SlotService {
     private void assignWorkSpaceToUser(long userId) {
         WorkSpace assignedWorkSpace = coordinateService.getNextAvailableWorkSpace();
         assignedWorkSpace.setUserId(userId);
-        assignedWorkSpace.setStatus(WorkSpaceStatus.OCCUPIED);
+        assignedWorkSpace.setStatus(WorkSpaceStatus.RESERVED);
         log.debug("WorkSpace assigned to UserId: {}", userId);
     }
 
@@ -126,7 +128,7 @@ public class SlotService {
 
     private StatusResponse makeStatusResponse(long userId, StatusResponse statusResponse) {
         if (peopleWaiting.contains(userId)) {
-            int positionInQueue = peopleWaiting.indexOf(userId) + 1;
+            int positionInQueue = (peopleInside.size() + peopleWaiting.indexOf(userId) + 1) - currentLimit;
             statusResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
             statusResponse.setPositionInQueue(positionInQueue);
         } else if (peopleInside.contains(userId)) {
@@ -156,12 +158,18 @@ public class SlotService {
     }
 
     private EntryResponse makeEntryResponse(long userId, EntryResponse entryResponse) {
-        int freeCapacity = currentLimit - peopleInside.size();
         int positionInQueue = peopleWaiting.indexOf(userId);
-        if (positionInQueue < freeCapacity) {
+        boolean canEnter = (peopleInside.size() + positionInQueue) < currentLimit;
+
+        if (canEnter || vipPersons.contains(userId)) {
             peopleInside.add(userId);
             peopleWaiting.remove(userId);
-            assignWorkSpaceToUser(userId);
+            WorkSpace workSpace = coordinateService.getWorkSpaceByUserId(userId);
+            if (workSpace == null) {
+                assignWorkSpaceToUser(userId);
+                workSpace = coordinateService.getWorkSpaceByUserId(userId);
+            }
+            workSpace.setStatus(WorkSpaceStatus.OCCUPIED);
             entryResponse.setStatus(StatusList.SUCCESS);
             entryResponse.setUrl(generateUrlForLayoutImage(userId));
             log.debug("User entered into building! UserId: {}", userId);

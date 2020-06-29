@@ -16,8 +16,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PreDestroy;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -136,6 +134,7 @@ public class SlotService {
             statusResponse.setPositionInQueue(positionInQueue);
         } else if (peopleInside.contains(userId)) {
             statusResponse.setStatus(StatusList.ALREADY_IN_BUILDING);
+            statusResponse.setPositionInQueue(0);
             log.error("User is already in building! UserId: {}", userId);
         }
         return statusResponse;

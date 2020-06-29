@@ -32,18 +32,37 @@ public class CoordinateService {
 
     /**
      * Loads the workspaces to allowedWorkSpaces list
-     * based on currentSafetyDistance
+     * based on the currentSafetyDistance setting
      */
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
+        int lastIndexOfCoordinates = getLastIndexOfCoordinates();
         ImageService imageService = new ImageService(currentSafetyDistance);
-        for (int i = 0; i < X_COORDINATES.length; i++) {
+        for (int i = 0; i < lastIndexOfCoordinates; i++) {
             int xCoordinate = X_COORDINATES[i];
             int yCoordinate = Y_COORDINATES[i];
-            //TODO logic for 5, 4, 3, 2, 1 meters
             WorkSpace workSpace = new WorkSpace(xCoordinate, yCoordinate, imageService);
             allowedWorkSpaces.add(workSpace);
         }
+    }
+
+    private int getLastIndexOfCoordinates() {
+        int lastIndexOfCoordinates;
+        switch (currentSafetyDistance) {
+            case 3:
+                lastIndexOfCoordinates = 72;
+                break;
+            case 2:
+                lastIndexOfCoordinates = 95;
+                break;
+            case 1:
+                lastIndexOfCoordinates = 113;
+                break;
+            default:
+                lastIndexOfCoordinates = 46;
+                break;
+        }
+        return lastIndexOfCoordinates;
     }
 
     /**

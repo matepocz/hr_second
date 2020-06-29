@@ -33,21 +33,6 @@ public class CoordinateService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("./startZookeeper.sh");
-            processBuilder.inheritIO().start();
-
-        } catch (IOException e) {
-            log.warn(e.getStackTrace().toString());
-        }
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("./startKafkaServer.sh");
-            processBuilder.inheritIO().start();
-
-        } catch (IOException e) {
-            log.warn(e.getStackTrace().toString());
-        }
-
         ImageService imageService = new ImageService(currentSafetyDistance);
         for (int i = 0; i < X_COORDINATES.length; i++) {
             int xCoordinate = X_COORDINATES[i];

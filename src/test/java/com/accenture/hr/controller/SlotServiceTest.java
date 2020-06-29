@@ -1,6 +1,6 @@
 package com.accenture.hr.controller;
 
-import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.enums.Status;
 import com.accenture.hr.service.SlotService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,8 +42,8 @@ public class SlotServiceTest {
         long userId = 1L;
         slotService.registerRequest(userId);
         slotService.entryRequest(userId);
-        StatusList actualStatus = slotService.registerRequest(userId).getStatus();
-        Assertions.assertEquals(StatusList.ALREADY_IN_BUILDING, actualStatus);
+        Status actualStatus = slotService.registerRequest(userId).getStatus();
+        Assertions.assertEquals(Status.ALREADY_IN_BUILDING, actualStatus);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class SlotServiceTest {
             slotService.registerRequest(i);
         }
         long vipUser = 999L;
-        Assertions.assertEquals(StatusList.REGISTERED, slotService.registerRequest(vipUser).getStatus());
+        Assertions.assertEquals(Status.REGISTERED, slotService.registerRequest(vipUser).getStatus());
     }
 
     @Test
@@ -75,8 +75,8 @@ public class SlotServiceTest {
         long userId = 22L;
         Assertions.assertEquals(slotService.getCurrentLimit(), slotService.getPeopleInside().size());
         Assertions.assertEquals(1, slotService.getPeopleWaiting().size());
-        StatusList actualStatus = slotService.registerRequest(userId).getStatus();
-        Assertions.assertEquals(StatusList.TO_WAITING_LIST, actualStatus);
+        Status actualStatus = slotService.registerRequest(userId).getStatus();
+        Assertions.assertEquals(Status.TO_WAITING_LIST, actualStatus);
     }
 
     @Test
@@ -103,8 +103,8 @@ public class SlotServiceTest {
 
         Assertions.assertEquals(slotService.getCurrentLimit(), slotService.getPeopleInside().size());
         Assertions.assertEquals(1, slotService.getPeopleWaiting().size());
-        StatusList actualStatus = slotService.registerRequest(userId).getStatus();
-        Assertions.assertEquals(StatusList.ALREADY_ON_WAITING_LIST, actualStatus);
+        Status actualStatus = slotService.registerRequest(userId).getStatus();
+        Assertions.assertEquals(Status.ALREADY_ON_WAITING_LIST, actualStatus);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class SlotServiceTest {
         long userId = 1L;
         slotService.registerRequest(userId);
         slotService.entryRequest(userId);
-        Assertions.assertEquals(StatusList.ALREADY_IN_BUILDING, slotService.statusRequest(userId).getStatus());
+        Assertions.assertEquals(Status.ALREADY_IN_BUILDING, slotService.statusRequest(userId).getStatus());
     }
 
     @Test
@@ -133,20 +133,20 @@ public class SlotServiceTest {
         }
         long userId = 500L;
         slotService.registerRequest(userId);
-        Assertions.assertEquals(StatusList.ALREADY_ON_WAITING_LIST, slotService.statusRequest(userId).getStatus());
+        Assertions.assertEquals(Status.ALREADY_ON_WAITING_LIST, slotService.statusRequest(userId).getStatus());
         Assertions.assertEquals(1, slotService.statusRequest(userId).getPositionInQueue());
     }
 
     @Test
     public void testStatus_isPeople_notRegisteredYet() {
-        Assertions.assertEquals(StatusList.NOT_REGISTERED, slotService.statusRequest(1L).getStatus());
+        Assertions.assertEquals(Status.NOT_REGISTERED, slotService.statusRequest(1L).getStatus());
     }
 
     @Test
     public void testEntry_isFull() {
         slotService.getPeopleInside().addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
         slotService.getPeopleWaiting().addAll(Arrays.asList(11L, 12L, 13L, 14L));
-        Assertions.assertEquals(StatusList.FAIL, slotService.entryRequest(13L).getStatus());
+        Assertions.assertEquals(Status.FAIL, slotService.entryRequest(13L).getStatus());
     }
 
     @Test
@@ -154,15 +154,15 @@ public class SlotServiceTest {
         slotService.getPeopleInside().addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L));
         slotService.getPeopleWaiting().addAll(Arrays.asList(9L, 10L, 11L));
         slotService.entryRequest(9L);
-        Assertions.assertEquals(StatusList.FAIL, slotService.entryRequest(11L).getStatus());
+        Assertions.assertEquals(Status.FAIL, slotService.entryRequest(11L).getStatus());
     }
 
     @Test
     public void testEntry() {
         slotService.getPeopleInside().add(1L);
         slotService.getPeopleWaiting().addAll(Arrays.asList(9L, 10L, 11L));
-        Assertions.assertEquals(StatusList.SUCCESS, slotService.entryRequest(9L).getStatus());
-        Assertions.assertEquals(StatusList.FAIL, slotService.entryRequest(10L).getStatus());
+        Assertions.assertEquals(Status.SUCCESS, slotService.entryRequest(9L).getStatus());
+        Assertions.assertEquals(Status.FAIL, slotService.entryRequest(10L).getStatus());
         Assertions.assertEquals(slotService.getPeopleInside().size(), slotService.getCurrentLimit());
     }
 
@@ -171,19 +171,19 @@ public class SlotServiceTest {
         slotService.getPeopleInside().add(1L);
         slotService.getPeopleWaiting().addAll(Arrays.asList(9L, 10L, 11L));
         long vipUser = 999L;
-        Assertions.assertEquals(StatusList.SUCCESS, slotService.entryRequest(vipUser).getStatus());
+        Assertions.assertEquals(Status.SUCCESS, slotService.entryRequest(vipUser).getStatus());
     }
 
     @Test
     public void testExit_isPeople_currentlyNotInBuilding() {
-        Assertions.assertEquals(StatusList.NOT_REGISTERED, slotService.exitRequest(4L).getStatus());
+        Assertions.assertEquals(Status.NOT_REGISTERED, slotService.exitRequest(4L).getStatus());
     }
 
     @Test
     public void testExit_exitUser() {
         slotService.getPeopleInside().add(1L);
         slotService.getPeopleInside().add(2L);
-        Assertions.assertEquals(StatusList.SUCCESS, slotService.exitRequest(1L).getStatus());
+        Assertions.assertEquals(Status.SUCCESS, slotService.exitRequest(1L).getStatus());
         Assertions.assertEquals(1, slotService.getPeopleInside().size());
     }
 }

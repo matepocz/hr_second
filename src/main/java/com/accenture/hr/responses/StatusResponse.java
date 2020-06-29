@@ -1,13 +1,13 @@
 package com.accenture.hr.responses;
 
-import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.enums.Status;
 
 public class StatusResponse {
 
-    private StatusList status;
+    private Status status;
     private int positionInQueue;
 
-    public StatusList getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -19,7 +19,7 @@ public class StatusResponse {
         this.positionInQueue = positionInQueue;
     }
 
-    public void setStatus(StatusList status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

@@ -1,6 +1,6 @@
 package com.accenture.hr.service;
 
-import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.enums.Status;
 import com.accenture.hr.enums.WorkSpaceStatus;
 import com.accenture.hr.model.WorkSpace;
 import com.accenture.hr.responses.EntryResponse;
@@ -39,6 +39,8 @@ public class SlotService {
     private final CoordinateService coordinateService;
     private final int placeInWaitingListToCall;
 
+    private Status status;
+
 
     @Autowired
     public SlotService(int currentLimit, List<Long> peopleInside,
@@ -64,10 +66,10 @@ public class SlotService {
         RegisterResponse registerResponse = new RegisterResponse();
         if (peopleInside.contains(userId)) {
             log.error("User is already in building! UserId: {}", userId);
-            registerResponse.setStatus(StatusList.ALREADY_IN_BUILDING);
+            registerResponse.setStatus(Status.ALREADY_IN_BUILDING);
         } else if (peopleWaiting.contains(userId)) {
             log.error("User is already on waitinglist! UserId: {}", userId);
-            registerResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
+            registerResponse.setStatus(Status.ALREADY_ON_WAITING_LIST);
         } else {
             putUserToCorrespondingList(userId, registerResponse);
         }
@@ -83,9 +85,15 @@ public class SlotService {
     }
 
     private void putUserToWaitingQueue(long userId, RegisterResponse registerResponse) {
+        this.status = Status.TO_WAITING_LIST;
         peopleWaiting.add(userId);
         log.debug("User placed on waitinglist! UserId: {}", userId);
-        registerResponse.setStatus(StatusList.TO_WAITING_LIST);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        registerResponse.setStatus(this.status);
         int positionInQueue = (peopleInside.size() + peopleWaiting.size()) - currentLimit;
         registerResponse.setPositionInQueue(positionInQueue);
     }
@@ -93,7 +101,7 @@ public class SlotService {
     private void putRegisteredUserToList(long userId, RegisterResponse registerResponse) {
         peopleWaiting.add(userId);
         assignWorkSpaceToUser(userId);
-        registerResponse.setStatus(StatusList.REGISTERED);
+        registerResponse.setStatus(Status.REGISTERED);
         registerResponse.setUrl(generateUrlForLayoutImage(userId));
         registerResponse.setPositionInQueue(0);
         log.debug("User registered to the office! UserId: {}", userId);
@@ -128,7 +136,7 @@ public class SlotService {
     public StatusResponse statusRequest(long userId) {
         StatusResponse statusResponse = new StatusResponse();
         if (userNotFound(userId)) {
-            statusResponse.setStatus(StatusList.NOT_REGISTERED);
+            statusResponse.setStatus(Status.NOT_REGISTERED);
             log.error("User is not registered yet! UserId: {}", userId);
             return statusResponse;
         }
@@ -138,10 +146,10 @@ public class SlotService {
     private StatusResponse makeStatusResponse(long userId, StatusResponse statusResponse) {
         if (peopleWaiting.contains(userId)) {
             int positionInQueue = (peopleInside.size() + peopleWaiting.indexOf(userId) + 1) - currentLimit;
-            statusResponse.setStatus(StatusList.ALREADY_ON_WAITING_LIST);
+            statusResponse.setStatus(Status.ALREADY_ON_WAITING_LIST);
             statusResponse.setPositionInQueue(positionInQueue);
         } else if (peopleInside.contains(userId)) {
-            statusResponse.setStatus(StatusList.ALREADY_IN_BUILDING);
+            statusResponse.setStatus(Status.ALREADY_IN_BUILDING);
             statusResponse.setPositionInQueue(0);
             log.error("User is already in building! UserId: {}", userId);
         }
@@ -160,7 +168,7 @@ public class SlotService {
     public EntryResponse entryRequest(long userId) {
         EntryResponse entryResponse = new EntryResponse();
         if (userNotFound(userId)) {
-            entryResponse.setStatus(StatusList.NOT_REGISTERED);
+            entryResponse.setStatus(Status.NOT_REGISTERED);
             log.error("User is not registered yet! UserId: {}", userId);
             return entryResponse;
         }
@@ -176,11 +184,11 @@ public class SlotService {
             peopleWaiting.remove(userId);
             WorkSpace workSpace = getWorkSpace(userId);
             workSpace.setStatus(WorkSpaceStatus.OCCUPIED);
-            entryResponse.setStatus(StatusList.SUCCESS);
+            entryResponse.setStatus(Status.SUCCESS);
             entryResponse.setUrl(generateUrlForLayoutImage(userId));
             log.debug("User entered into building! UserId: {}", userId);
         } else {
-            entryResponse.setStatus(StatusList.FAIL);
+            entryResponse.setStatus(Status.FAIL);
             log.debug("No free capacity, User stays in waiting list! UserId: {}", userId);
         }
         return entryResponse;
@@ -206,10 +214,10 @@ public class SlotService {
         ExitResponse exitResponse = new ExitResponse();
         if (!peopleInside.contains(userId)) {
             log.error("User is currently not in the building! UserId: {}", userId);
-            exitResponse.setStatus(StatusList.NOT_REGISTERED);
+            exitResponse.setStatus(Status.NOT_REGISTERED);
         } else {
             peopleInside.remove(userId);
-            exitResponse.setStatus(StatusList.SUCCESS);
+            exitResponse.setStatus(Status.SUCCESS);
             deAssignWorkSpace(userId);
             ImageService.deleteImageFileByUserId(userId);
             log.debug("User exited the building! UserId: {}", userId);
@@ -234,6 +242,7 @@ public class SlotService {
 
     @KafkaListener(id = "consumer-group-id-1", topics = TOPIC, groupId = "group-id")
     public void consume(long id) {
+        this.status = Status.READY_TO_ENTER;
         String messageToConsumer = "User with id of: " + id + " getPossibility to Enter Into Building";
         log.info(messageToConsumer);
     }

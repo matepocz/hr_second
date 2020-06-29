@@ -1,20 +1,20 @@
 package com.accenture.hr.responses;
 
-import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.enums.Status;
 
 import java.net.URL;
 
 public class RegisterResponse {
 
-    private StatusList status;
+    private Status status;
     private URL url;
     private int positionInQueue;
 
-    public StatusList getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(StatusList status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

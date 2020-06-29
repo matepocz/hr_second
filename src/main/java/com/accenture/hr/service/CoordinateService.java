@@ -52,7 +52,7 @@ public class CoordinateService {
         }
         executor.shutdown();
         try {
-            executor.awaitTermination(25, TimeUnit.SECONDS);
+            executor.awaitTermination(40, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

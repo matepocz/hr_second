@@ -1,16 +1,16 @@
 package com.accenture.hr.responses;
 
-import com.accenture.hr.enums.StatusList;
+import com.accenture.hr.enums.Status;
 
 public class ExitResponse {
 
-    private StatusList status;
+    private Status status;
 
-    public StatusList getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(StatusList status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

@@ -9,7 +9,12 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +45,15 @@ public class CoordinateService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Path copied = Paths.get("src/main/resources/images/temp_layout.jpg");
+        Path originalPath = Paths.get("src/main/resources/images/office_layout.jpg");
+        try {
+            Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //TODO move to another file
 
         ImageService imageService = new ImageService(currentSafetyDistance);
         for (int i = 0; i < X_COORDINATES.length; i++) {

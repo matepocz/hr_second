@@ -23,13 +23,14 @@ import java.nio.file.Paths;
 public class SlotController {
 
     private static final String OFFICE_LAYOUT_IMAGES_PATH = "src/main/resources/images/";
-    private static final String CURRENT_LAYOUT = "src/main/resources/images/temp_layout.jpg";
 
     private final SlotService slotService;
+    private final int currentSafetyDistance;
 
     @Autowired
-    public SlotController(SlotService slotService) {
+    public SlotController(SlotService slotService, int currentSafetyDistance) {
         this.slotService = slotService;
+        this.currentSafetyDistance = currentSafetyDistance;
     }
 
     @PostMapping("/register")
@@ -85,7 +86,8 @@ public class SlotController {
     public ResponseEntity<byte[]> getCurrentLayout() {
         byte[] data = null;
         try {
-            File file = new File(CURRENT_LAYOUT);
+            String tempLayoutPath = "src/main/resources/images/temp_layout_" + currentSafetyDistance + "_meter.jpg";
+            File file = new File(tempLayoutPath);
             Path fileLocation = Paths.get(String.valueOf(file));
             data = Files.readAllBytes(fileLocation);
         } catch (IOException e) {

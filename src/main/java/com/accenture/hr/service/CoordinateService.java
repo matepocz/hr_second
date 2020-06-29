@@ -76,6 +76,10 @@ public class CoordinateService {
     }
 
 
+    /**
+     * Get the next available workspace
+     * @return A WorkSpace, null if there is none
+     */
     public WorkSpace getNextAvailableWorkSpace() {
         for (WorkSpace allowedWorkSpace : allowedWorkSpaces) {
             if (allowedWorkSpace.getStatus().equals(WorkSpaceStatus.FREE)) {
@@ -85,6 +89,11 @@ public class CoordinateService {
         return null;
     }
 
+    /**
+     * Get the workspace assigned to this user
+     * @param userId The ID of the user
+     * @return A WorkSpace, null if there is no workspace assigned to this user
+     */
     public WorkSpace getWorkSpaceByUserId(long userId) {
         for (WorkSpace workSpace : allowedWorkSpaces) {
             if (workSpace.getUserId() == userId) {

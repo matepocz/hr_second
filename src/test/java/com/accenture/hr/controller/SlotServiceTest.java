@@ -58,6 +58,15 @@ public class SlotServiceTest {
     }
 
     @Test
+    public void testRegister_noSpace_vipPersonCanRegister() {
+        for (int i = 0; i < slotService.getCurrentLimit() + 1; i++) {
+            slotService.registerRequest(i);
+        }
+        long vipUser = 999L;
+        Assertions.assertEquals(StatusList.REGISTERED, slotService.registerRequest(vipUser).getStatus());
+    }
+
+    @Test
     public void testRegister_putsOnWaitingList() {
         for (int i = 0; i < slotService.getCurrentLimit() + 1; i++) {
             slotService.registerRequest(i);
@@ -118,6 +127,17 @@ public class SlotServiceTest {
     }
 
     @Test
+    public void testStatus_personFirstInQueue() {
+        for (int i = 1; i <= slotService.getCurrentLimit(); i++) {
+            slotService.registerRequest(i);
+        }
+        long userId = 500L;
+        slotService.registerRequest(userId);
+        Assertions.assertEquals(StatusList.ALREADY_ON_WAITING_LIST, slotService.statusRequest(userId).getStatus());
+        Assertions.assertEquals(1, slotService.statusRequest(userId).getPositionInQueue());
+    }
+
+    @Test
     public void testStatus_isPeople_notRegisteredYet() {
         Assertions.assertEquals(StatusList.NOT_REGISTERED, slotService.statusRequest(1L).getStatus());
     }
@@ -144,6 +164,14 @@ public class SlotServiceTest {
         Assertions.assertEquals(StatusList.SUCCESS, slotService.entryRequest(9L).getStatus());
         Assertions.assertEquals(StatusList.FAIL, slotService.entryRequest(10L).getStatus());
         Assertions.assertEquals(slotService.getPeopleInside().size(), slotService.getCurrentLimit());
+    }
+
+    @Test
+    public void testEntry_vipPersonCanEnter() {
+        slotService.getPeopleInside().add(1L);
+        slotService.getPeopleWaiting().addAll(Arrays.asList(9L, 10L, 11L));
+        long vipUser = 999L;
+        Assertions.assertEquals(StatusList.SUCCESS, slotService.entryRequest(vipUser).getStatus());
     }
 
     @Test

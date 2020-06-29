@@ -6,17 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +38,7 @@ public class CoordinateService {
             processBuilder.inheritIO();
             Process process = processBuilder.start();
 
-        } catch (IOException  e) {
+        } catch (IOException e) {
             log.warn(e.getStackTrace().toString());
         }
         try {
@@ -52,18 +46,9 @@ public class CoordinateService {
             processBuilder.inheritIO();
             Process process = processBuilder.start();
 
-        }catch (IOException  e) {
+        } catch (IOException e) {
             log.warn(e.getStackTrace().toString());
         }
-
-        Path copied = Paths.get("src/main/resources/images/temp_layout.jpg");
-        Path originalPath = Paths.get("src/main/resources/images/office_layout.jpg");
-        try {
-            Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //TODO move to another file
 
         ImageService imageService = new ImageService(currentSafetyDistance);
         for (int i = 0; i < X_COORDINATES.length; i++) {
@@ -75,9 +60,9 @@ public class CoordinateService {
         }
     }
 
-
     /**
      * Get the next available workspace
+     *
      * @return A WorkSpace, null if there is none
      */
     public WorkSpace getNextAvailableWorkSpace() {
@@ -91,6 +76,7 @@ public class CoordinateService {
 
     /**
      * Get the workspace assigned to this user
+     *
      * @param userId The ID of the user
      * @return A WorkSpace, null if there is no workspace assigned to this user
      */

@@ -74,7 +74,6 @@ public class SlotService {
 
     private void putUserToCorrespondingList(long userId, RegisterResponse registerResponse) {
         if ((peopleInside.size() + peopleWaiting.size()) < currentLimit || vipPersons.contains(userId)) {
-            //peopleInside.add(userId);
             peopleWaiting.add(userId);
             log.debug("User registered to the office! UserId: {}", userId);
             assignWorkSpaceToUser(userId);

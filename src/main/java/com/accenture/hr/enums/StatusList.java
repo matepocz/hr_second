@@ -1,6 +1,7 @@
 package com.accenture.hr.enums;
 
 public enum StatusList {
+    REGISTERED,
     SUCCESS,
     FAIL,
     ALREADY_IN_BUILDING,

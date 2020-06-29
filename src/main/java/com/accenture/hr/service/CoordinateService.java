@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,16 +32,20 @@ public class CoordinateService {
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
         try {
-            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startZookeeper.sh");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startKafkaServer.sh");
+           //   Runtime.getRuntime().exec("/home/student/mentoring/students/accenture-contest/startZookeeper.sh");
+
+                Runtime.getRuntime().exec("/home/student/mentoring/students/accenture-contest/src/assests/startZookeeper.sh");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        try {
+
+            Runtime.getRuntime().exec("/home/student/mentoring/students/accenture-contest/startKafkaServer.sh");
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+/*
         ImageService imageService = new ImageService(currentSafetyDistance);
         for (int i = 0; i < X_COORDINATES.length; i++) {
             int xCoordinate = X_COORDINATES[i];
@@ -48,25 +53,8 @@ public class CoordinateService {
             //TODO logic for 5, 4, 3, 2, 1 meters
             WorkSpace workSpace = new WorkSpace(xCoordinate, yCoordinate, imageService);
             allowedWorkSpaces.add(workSpace);
-        }
+        }*/
     }
-
-//    @EventListener(ApplicationStartingEvent.class)
-//    public void  runKafkaServer(){
-//        boolean isWindows = System.getProperty("os.name")
-//                .toLowerCase().startsWith("windows");
-//        try {
-//                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/zookeeper-server-start.sh", "kafka/kafka_2.12-2.5.0/config/zookeeper.properties"});
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//                    Runtime.getRuntime().exec(new String[]{"kafka/kafka_2.12-2.5.0/bin/kafka-server-start.sh", "kafka/kafka_2.12-2.5.0/config/server.properties"});
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//    }
 
     public WorkSpace getNextAvailableWorkSpace() {
         for (WorkSpace allowedWorkSpace : allowedWorkSpaces) {

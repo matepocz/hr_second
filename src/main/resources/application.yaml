@@ -31,7 +31,7 @@ server:
 
 vipPersons: 995,996,997,998,999
 
-currentSafetyDistance: 1
+currentSafetyDistance: 5
 
 bootstrap-servers:  127.0.0.1:9092
 

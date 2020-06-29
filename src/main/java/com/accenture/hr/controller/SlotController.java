@@ -36,7 +36,7 @@ public class SlotController {
     public ResponseEntity<RegisterResponse> register(@RequestParam Long userId) {
         RegisterResponse registerResponse = slotService.registerRequest(userId);
         StatusList status = registerResponse.getStatus();
-        return status.equals(StatusList.SUCCESS) ?
+        return status.equals(StatusList.REGISTERED) ?
                 new ResponseEntity<>(registerResponse, HttpStatus.OK) :
                 new ResponseEntity<>(registerResponse, HttpStatus.FORBIDDEN);
     }

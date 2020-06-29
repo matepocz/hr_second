@@ -29,10 +29,10 @@ public class ImageService {
     private static final String IMAGE_PREFIX = "src/main/resources/images/";
 
     public void drawWorkSpace(int x, int y, Color color, long userId) {
-        String tempFilePath = getImgFilePath(CURRENT_LAYOUT);
-        BufferedImage newImg = makeBufferedImage(x, y, color, tempFilePath);
         try {
             if (userId != 0) {
+                String tempFilePath = getImgFilePath(CURRENT_LAYOUT);
+                BufferedImage newImg = makeBufferedImage(x, y, color, tempFilePath);
                 File outputFile = new File(IMAGE_PREFIX + userId + ".jpg");
                 ImageIO.write(newImg, "jpg", outputFile);
             }

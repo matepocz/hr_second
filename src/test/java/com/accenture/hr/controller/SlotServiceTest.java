@@ -76,7 +76,7 @@ public class SlotServiceTest {
         Assertions.assertEquals(slotService.getCurrentLimit(), slotService.getPeopleInside().size());
         Assertions.assertEquals(1, slotService.getPeopleWaiting().size());
         Status actualStatus = slotService.registerRequest(userId).getStatus();
-        Assertions.assertEquals(Status.TO_WAITING_LIST, actualStatus);
+        Assertions.assertEquals(Status.READY_TO_ENTER, actualStatus);
     }
 
     @Test

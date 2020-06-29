@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,15 +38,14 @@ public class SlotService {
     private final CoordinateService coordinateService;
     private final int placeInWaitingListToCall;
 
-//    @Autowired
-//    private KafkaTemplate<String, String> kafkaTemplate;
+
 
     @Autowired
     public SlotService(int currentLimit, List<Long> peopleInside,
-                       List<Long> vipPersons, CoordinateService coordinateService, int getPlaceInWaitingListToCall) {
+                       List<Long> vipPersons, CoordinateService coordinateService, int getPlaceInWaitingListToCall, KafkaTemplate<String, String>template) {
         this.currentLimit = currentLimit;
         this.peopleInside = peopleInside;
-        this.peopleWaiting = new WaitingList<>(this);
+        this.peopleWaiting = new WaitingList<>(this,template);
         this.vipPersons = vipPersons;
         this.coordinateService = coordinateService;
         this.placeInWaitingListToCall = getPlaceInWaitingListToCall;

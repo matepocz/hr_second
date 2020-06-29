@@ -58,7 +58,7 @@ public class SlotService {
      * @param userId the ID of the user
      * @return A RegisterResponse containing an enum with the result
      */
-    public RegisterResponse registerRequest(Long userId) {
+    public RegisterResponse registerRequest(long userId) {
         RegisterResponse registerResponse = new RegisterResponse();
         if (peopleInside.contains(userId)) {
             log.error("User is already in building! UserId: {}", userId);
@@ -72,7 +72,7 @@ public class SlotService {
         return registerResponse;
     }
 
-    private void putUserToCorrespondingList(Long userId, RegisterResponse registerResponse) {
+    private void putUserToCorrespondingList(long userId, RegisterResponse registerResponse) {
         if (peopleInside.size() < currentLimit || vipPersons.contains(userId)) {
             peopleInside.add(userId);
             log.debug("User checked into building! UserId: {}", userId);
@@ -88,7 +88,7 @@ public class SlotService {
         }
     }
 
-    private URL generateUrlForLayoutImage(Long userId) {
+    private URL generateUrlForLayoutImage(long userId) {
         String hostName = InetAddress.getLoopbackAddress().getHostAddress();
         String usersImage = LINK_TO_GET_FILE + userId + ".jpg";
         URL url = null;
@@ -100,7 +100,7 @@ public class SlotService {
         return url;
     }
 
-    private void assignWorkSpaceToUser(Long userId) {
+    private void assignWorkSpaceToUser(long userId) {
         WorkSpace assignedWorkSpace = coordinateService.getNextAvailableWorkSpace();
         assignedWorkSpace.setUserId(userId);
         assignedWorkSpace.setStatus(WorkSpaceStatus.OCCUPIED);

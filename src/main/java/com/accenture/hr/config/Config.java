@@ -12,15 +12,20 @@ import java.util.List;
 @Configuration
 @EnableConfigurationProperties
 public class Config {
+
     @Value("${maxCapacity}")
     private int maxCapacity;
+
     @Value("${currentAllowancePercent}")
     private int currentAllowancePercent;
+
     @Value("${currentSafetyDistance}")
     private int currentSafetyDistance;
+
     @Value("${vipPersons}")
     private String vipPersons;
-    @Value(("${placeInWaitingListToCall}"))
+
+    @Value("${placeInWaitingListToCall}")
     private int placeInWaitingListToCall;
 
     @Bean
@@ -57,4 +62,5 @@ public class Config {
     public int getPlaceInWaitingListToCall() {
         return placeInWaitingListToCall;
     }
+
 }

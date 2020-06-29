@@ -1,5 +1,6 @@
 package com.accenture.hr.service;
 
+import com.accenture.hr.config.Config;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +20,10 @@ public class WaitingList<E> extends ArrayList<E> {
     private SlotService slotService;
 
     @Autowired
+    private Config config;
+
+    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
-
-    private int currentLimit;
-    private int placeInWaitingListToCall;
-
-    public WaitingList() {
-        this.currentLimit = slotService.getCurrentLimit();
-        this.placeInWaitingListToCall = slotService.getPlaceInWaitingListToCall();
-    }
 
     @Override
     public boolean add(E e) {
@@ -36,17 +32,23 @@ public class WaitingList<E> extends ArrayList<E> {
         return result;
     }
 
-   /* @Override
+    @Override
     public boolean remove(Object index) {
         boolean removed = super.remove(index);
+        if (index != null) {
+            callBack((E) index);
+        }
         return removed;
-    }*/
+    }
 
     public void callBack(E e) {
         ProducerRecord<String, String> message = null;
+
+        int currentLimit = slotService.getCurrentLimit();
+        int placeInWaitingListToCall = slotService.getPlaceInWaitingListToCall();
         for (int i = 0; i < this.size(); i++) {
-            if (i <= this.currentLimit || (i - this.currentLimit) % this.placeInWaitingListToCall == 0) {
-                String messageToConsumer = "User with id : " + e + " getPossibilityTo Enter IntoBuilding";
+            if (i <= currentLimit || (i - currentLimit) % placeInWaitingListToCall == 0) {
+                String messageToConsumer = "User with id of: " + e + " getPossibility to Enter Into Building";
                 message = new ProducerRecord<>(TOPIC, messageToConsumer);
                 kafkaTemplate.send(message);
             }

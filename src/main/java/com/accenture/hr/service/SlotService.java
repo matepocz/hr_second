@@ -159,7 +159,7 @@ public class SlotService {
         return makeEntryResponse(userId, entryResponse);
     }
 
-    private EntryResponse makeEntryResponse(long userId, EntryResponse entryResponse) {
+    private EntryResponse makeEntryResponse(Long userId, EntryResponse entryResponse) {
         int positionInQueue = peopleWaiting.indexOf(userId);
         boolean canEnter = (peopleInside.size() + positionInQueue) < currentLimit;
 
@@ -189,7 +189,7 @@ public class SlotService {
      * @param userId the ID of the user
      * @return An ExitResponse containing an enum with the result
      */
-    public ExitResponse exitRequest(long userId) {
+    public ExitResponse exitRequest(Long userId) {
         ExitResponse exitResponse = new ExitResponse();
         if (!peopleInside.contains(userId)) {
             log.error("User is currently not in the building! UserId: {}", userId);

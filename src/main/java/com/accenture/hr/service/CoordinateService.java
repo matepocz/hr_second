@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -38,11 +42,19 @@ public class CoordinateService {
     public void getAllowedWorkSpaces() {
         int lastIndexOfCoordinates = getLastIndexOfCoordinates();
         ImageService imageService = new ImageService(currentSafetyDistance);
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(100);
         for (int i = 0; i < lastIndexOfCoordinates; i++) {
             int xCoordinate = X_COORDINATES[i];
             int yCoordinate = Y_COORDINATES[i];
             WorkSpace workSpace = new WorkSpace(xCoordinate, yCoordinate, imageService);
+            executor.execute(workSpace);
             allowedWorkSpaces.add(workSpace);
+        }
+        executor.shutdown();
+        try {
+            executor.awaitTermination(25, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

@@ -31,12 +31,12 @@ public class CoordinateService {
     @EventListener(ApplicationReadyEvent.class)
     public void getAllowedWorkSpaces() {
         try {
-            Runtime.getRuntime().exec("startZookeeper.sh");
+            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startZookeeper.sh");
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            Runtime.getRuntime().exec("startKafkaServer.sh");
+            Runtime.getRuntime().exec("/home/mtp/IdeaProjects/Accenture/accenture-contest/startZookeeper.sh");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,7 +77,7 @@ public class CoordinateService {
         return null;
     }
 
-    public WorkSpace getWorkSpaceByUserId(Long userId) {
+    public WorkSpace getWorkSpaceByUserId(long userId) {
         for (WorkSpace workSpace : allowedWorkSpaces) {
             if (workSpace.getUserId() == userId) {
                 return workSpace;

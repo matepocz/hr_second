@@ -76,19 +76,27 @@ public class SlotService {
 
     private void putUserToCorrespondingList(long userId, RegisterResponse registerResponse) {
         if ((peopleInside.size() + peopleWaiting.size()) < currentLimit || vipPersons.contains(userId)) {
-            peopleWaiting.add(userId);
-            log.debug("User registered to the office! UserId: {}", userId);
-            assignWorkSpaceToUser(userId);
-            registerResponse.setStatus(StatusList.REGISTERED);
-            registerResponse.setUrl(generateUrlForLayoutImage(userId));
-            registerResponse.setPositionInQueue(0);
+            putRegisteredUserToList(userId, registerResponse);
         } else {
-            peopleWaiting.add(userId);
-            log.debug("User placed on waitinglist! UserId: {}", userId);
-            registerResponse.setStatus(StatusList.TO_WAITING_LIST);
-            int positionInQueue = (peopleInside.size() + peopleWaiting.size()) - currentLimit;
-            registerResponse.setPositionInQueue(positionInQueue);
+            putUserToWaitingQueue(userId, registerResponse);
         }
+    }
+
+    private void putUserToWaitingQueue(long userId, RegisterResponse registerResponse) {
+        peopleWaiting.add(userId);
+        log.debug("User placed on waitinglist! UserId: {}", userId);
+        registerResponse.setStatus(StatusList.TO_WAITING_LIST);
+        int positionInQueue = (peopleInside.size() + peopleWaiting.size()) - currentLimit;
+        registerResponse.setPositionInQueue(positionInQueue);
+    }
+
+    private void putRegisteredUserToList(long userId, RegisterResponse registerResponse) {
+        peopleWaiting.add(userId);
+        assignWorkSpaceToUser(userId);
+        registerResponse.setStatus(StatusList.REGISTERED);
+        registerResponse.setUrl(generateUrlForLayoutImage(userId));
+        registerResponse.setPositionInQueue(0);
+        log.debug("User registered to the office! UserId: {}", userId);
     }
 
     private URL generateUrlForLayoutImage(long userId) {

@@ -50,7 +50,7 @@ public class ImageService {
         int circlesOffset = (int) Math.ceil(radiusOfCircle / (double) 2);
         ip.drawOval(x - 3, y - 3, 6, 6);
         ip.drawOval(x - circlesOffset, y - circlesOffset, radiusOfCircle, radiusOfCircle);
-        log.debug(String.format("Workspace colored to %s", color));
+        log.debug(String.format("x: %s, y: %s colored to %s", x, y, color));
 
         return imagePlus.getBufferedImage();
     }
